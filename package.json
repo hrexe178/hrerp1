@@ -4,7 +4,7 @@
   "description": "Production-ready HR ERP System with Employee, Attendance, Project, and Document Management",
   "main": "backend/server.js",
   "engines": {
-    "node": "18.x"
+    "node": "24.x"
   },
   "scripts": {
     "start": "node backend/server.js",
