@@ -4,33 +4,67 @@ import axios from 'axios';
 
 const AttendanceManagement = () => {
   const [attendance, setAttendance] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchInput, setSearchInput] = useState('');
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [formData, setFormData] = useState({
-    employeeId: '',
+    employee: '',
     date: new Date().toISOString().split('T')[0],
-    status: 'present',
+    status: 'Present',
     checkInTime: '',
     checkOutTime: '',
     remarks: '',
   });
 
   useEffect(() => {
-    fetchAttendance();
+    fetchData();
   }, []);
 
-  const fetchAttendance = async () => {
+  const fetchData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('/api/attendance', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setAttendance(response.data.data || []);
+      const [attendanceRes, employeesRes] = await Promise.all([
+        axios.get('http://localhost:5000/api/attendance', {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get('http://localhost:5000/api/employees', {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+      setAttendance(attendanceRes.data.data || []);
+      setEmployees(employeesRes.data.data || []);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+
+    if (value.length >= 3) {
+      const filtered = employees.filter(
+        (emp) =>
+          emp.firstName.toLowerCase().includes(value.toLowerCase()) ||
+          emp.lastName.toLowerCase().includes(value.toLowerCase()) ||
+          emp.employeeId.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredEmployees(filtered);
+    } else {
+      setFilteredEmployees([]);
+    }
+  };
+
+  const handleSelectEmployee = (emp) => {
+    setSelectedEmployee(emp);
+    setSearchInput(`${emp.firstName} ${emp.lastName} (${emp.employeeId})`);
+    setFormData({ ...formData, employee: emp._id });
+    setFilteredEmployees([]);
   };
 
   const handleChange = (e) => {
@@ -39,22 +73,30 @@ const AttendanceManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.employee) {
+      alert('Please select an employee');
+      return;
+    }
     try {
       const token = localStorage.getItem('token');
-      await axios.post('/api/attendance', formData, {
+      await axios.post('http://localhost:5000/api/attendance', formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      alert('Attendance marked successfully');
       setFormData({
-        employeeId: '',
+        employee: '',
         date: new Date().toISOString().split('T')[0],
-        status: 'present',
+        status: 'Present',
         checkInTime: '',
         checkOutTime: '',
         remarks: '',
       });
-      fetchAttendance();
+      setSearchInput('');
+      setSelectedEmployee(null);
+      fetchData();
     } catch (error) {
       console.error('Error marking attendance:', error);
+      alert('Error marking attendance: ' + (error.response?.data?.message || error.message));
     }
   };
 
@@ -65,14 +107,33 @@ const AttendanceManagement = () => {
     <div className="attendance-management">
       <h1>Attendance Management</h1>
       <form onSubmit={handleSubmit} className="attendance-form">
-        <input
-          type="text"
-          name="employeeId"
-          placeholder="Employee ID"
-          value={formData.employeeId}
-          onChange={handleChange}
-          required
-        />
+        <div className="form-group">
+          <label>Employee (Start typing name or ID)</label>
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search employee by name or ID (min 3 chars)"
+              value={searchInput}
+              onChange={handleSearchChange}
+              required={!selectedEmployee}
+            />
+            {filteredEmployees.length > 0 && (
+              <ul className="suggestions-dropdown">
+                {filteredEmployees.map((emp) => (
+                  <li key={emp._id} onClick={() => handleSelectEmployee(emp)}>
+                    {emp.firstName} {emp.lastName} ({emp.employeeId})
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {selectedEmployee && (
+            <p style={{ marginTop: '5px', color: 'green' }}>
+              ✓ Selected: {selectedEmployee.firstName} {selectedEmployee.lastName}
+            </p>
+          )}
+        </div>
+
         <input
           type="date"
           name="date"
@@ -80,24 +141,30 @@ const AttendanceManagement = () => {
           onChange={handleChange}
           required
         />
+
         <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="present">Present</option>
-          <option value="absent">Absent</option>
-          <option value="half-day">Half Day</option>
-          <option value="leave">Leave</option>
+          <option value="Present">Present</option>
+          <option value="Absent">Absent</option>
+          <option value="Half-Day">Half Day</option>
+          <option value="Leave">Leave</option>
+          <option value="Holiday">Holiday</option>
+          <option value="Weekend">Weekend</option>
         </select>
+
         <input
           type="time"
           name="checkInTime"
           value={formData.checkInTime}
           onChange={handleChange}
         />
+
         <input
           type="time"
           name="checkOutTime"
           value={formData.checkOutTime}
           onChange={handleChange}
         />
+
         <input
           type="text"
           name="remarks"
@@ -105,8 +172,11 @@ const AttendanceManagement = () => {
           value={formData.remarks}
           onChange={handleChange}
         />
+
         <button type="submit">Mark Attendance</button>
       </form>
+
+      <h2>Attendance Records</h2>
       <table className="table">
         <thead>
           <tr>
@@ -115,16 +185,18 @@ const AttendanceManagement = () => {
             <th>Status</th>
             <th>Check In</th>
             <th>Check Out</th>
+            <th>Remarks</th>
           </tr>
         </thead>
         <tbody>
           {attendance.map((record) => (
             <tr key={record._id}>
-              <td>{record.employeeId?.firstName} {record.employeeId?.lastName}</td>
+              <td>{record.employee?.firstName} {record.employee?.lastName}</td>
               <td>{new Date(record.date).toLocaleDateString()}</td>
               <td>{record.status}</td>
-              <td>{record.checkInTime}</td>
-              <td>{record.checkOutTime}</td>
+              <td>{record.checkInTime || '-'}</td>
+              <td>{record.checkOutTime || '-'}</td>
+              <td>{record.remarks || '-'}</td>
             </tr>
           ))}
         </tbody>

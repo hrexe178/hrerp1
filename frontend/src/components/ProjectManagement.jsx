@@ -9,22 +9,37 @@ const ProjectManagement = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/projects', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setProjects(response.data.data || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProjects();
   }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:5000/api/projects', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProjects(response.data.data || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this project?')) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`http://localhost:5000/api/projects/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert('Project deleted successfully');
+        fetchProjects();
+      } catch (err) {
+        alert('Error deleting project: ' + err.message);
+      }
+    }
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -50,15 +65,16 @@ const ProjectManagement = () => {
         <tbody>
           {projects.map((project) => (
             <tr key={project._id}>
-              <td>{project.projectName}</td>
+              <td>{project.name || project.projectName}</td>
               <td>{project.status}</td>
               <td>{new Date(project.startDate).toLocaleDateString()}</td>
               <td>{project.endDate ? new Date(project.endDate).toLocaleDateString() : 'N/A'}</td>
               <td>{project.progressPercentage}%</td>
               <td>{project.manager?.firstName} {project.manager?.lastName}</td>
               <td>
-                <Link to={`/projects/${project._id}`}>View</Link>
-                <Link to={`/projects/${project._id}/edit`}>Edit</Link>
+                <Link to={`/projects/${project._id}`} className="action-link">View</Link>
+                <Link to={`/projects/${project._id}/edit`} className="action-link">Edit</Link>
+                <button onClick={() => handleDelete(project._id)} className="action-btn delete-btn">Delete</button>
               </td>
             </tr>
           ))}

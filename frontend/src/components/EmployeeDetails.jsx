@@ -13,7 +13,7 @@ const EmployeeDetails = () => {
     const fetchEmployee = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`/api/employees/${id}`, {
+        const response = await axios.get(`http://localhost:5000/api/employees/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setEmployee(response.data.data || response.data);
@@ -65,4 +65,10 @@ const EmployeeDetails = () => {
         <h3>Emergency Contact</h3>
         <p><strong>Name:</strong> {employee.emergencyContact?.name || 'N/A'}</p>
         <p><strong>Phone:</strong> {employee.emergencyContact?.phone || 'N/A'}</p>
-        <p><strong>Relationship:</strong> {employee.emergencyContact?.relationship || 'N/A'}</p>
+        <p><strong>Relationship:</strong> {employee.emergencyContact?.relationship || 'N/A'}</p>
+      </div>
+    </div>
+  );
+};
+
+export default EmployeeDetails;

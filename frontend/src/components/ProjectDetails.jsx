@@ -13,7 +13,7 @@ const ProjectDetails = () => {
     const fetchProject = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`/api/projects/${id}`, {
+        const response = await axios.get(`http://localhost:5000/api/projects/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProject(response.data.data || response.data);

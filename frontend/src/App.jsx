@@ -11,6 +11,7 @@ import EmployeeForm from './components/EmployeeForm';
 import EmployeeDetails from './components/EmployeeDetails';
 import AttendanceManagement from './components/AttendanceManagement';
 import ProjectManagement from './components/ProjectManagement';
+import ProjectForm from './components/ProjectForm';
 import ProjectDetails from './components/ProjectDetails';
 import DocumentManager from './components/DocumentManager';
 import Reports from './components/Reports';
@@ -111,12 +112,34 @@ function App() {
             }
           />
           <Route
+            path="/projects/create"
+            element={
+              <ProtectedRoute>
+                <>
+                  <Navbar />
+                  <ProjectForm />
+                </>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/projects/:id"
             element={
               <ProtectedRoute>
                 <>
                   <Navbar />
                   <ProjectDetails />
+                </>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:id/edit"
+            element={
+              <ProtectedRoute>
+                <>
+                  <Navbar />
+                  <ProjectForm />
                 </>
               </ProtectedRoute>
             }

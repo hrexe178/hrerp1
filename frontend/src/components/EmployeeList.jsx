@@ -15,7 +15,7 @@ const EmployeeList = () => {
   const fetchEmployees = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('/api/employees', {
+      const response = await axios.get('http://localhost:5000/api/employees', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setEmployees(response.data.data || []);
@@ -30,7 +30,7 @@ const EmployeeList = () => {
     if (window.confirm('Are you sure you want to delete this employee?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`/api/employees/${id}`, {
+        await axios.delete(`http://localhost:5000/api/employees/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert('Employee deleted successfully');

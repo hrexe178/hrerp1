@@ -73,8 +73,11 @@ router.post(
     body('fileUrl', 'File URL is required').notEmpty(),
   ],
   async (req, res, next) => {
+    console.log('📄 Document POST request body:', req.body);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('❌ Validation errors:', errors.array());
       return res.status(400).json({ success: false, errors: errors.array() });
     }
 
@@ -83,6 +86,8 @@ router.post(
         ...req.body,
         uploadedBy: req.user.id,
       };
+
+      console.log('✅ Creating document with data:', documentData);
 
       const document = await Document.create(documentData);
 
@@ -96,6 +101,7 @@ router.post(
         data: document,
       });
     } catch (error) {
+      console.error('❌ Error creating document:', error.message);
       next(error);
     }
   }

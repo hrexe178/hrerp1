@@ -16,21 +16,26 @@ const Reports = () => {
       try {
         const token = localStorage.getItem('token');
         const [employees, attendance, projects] = await Promise.all([
-          axios.get('/api/employees', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('/api/attendance', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('/api/projects', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('http://localhost:5000/api/employees', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('http://localhost:5000/api/attendance', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('http://localhost:5000/api/projects', { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
+        // Extract data arrays from API responses
+        const employeesData = employees.data.data || employees.data || [];
+        const attendanceData = attendance.data.data || attendance.data || [];
+        const projectsData = projects.data.data || projects.data || [];
+
         const today = new Date().toDateString();
-        const presentToday = attendance.data.filter(
-          (a) => new Date(a.date).toDateString() === today && a.status === 'present'
+        const presentToday = attendanceData.filter(
+          (a) => new Date(a.date).toDateString() === today && a.status === 'Present'
         ).length;
 
         setReportData({
-          totalEmployees: employees.data.length,
+          totalEmployees: employeesData.length,
           presentToday,
-          onLeave: employees.data.filter((e) => e.status === 'on-leave').length,
-          projects: projects.data,
+          onLeave: employeesData.filter((e) => e.status === 'on-leave').length,
+          projects: projectsData,
         });
       } catch (error) {
         console.error('Error fetching report data:', error);
