@@ -1,6 +1,6 @@
 // Employee list component
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { Link } from 'react-router-dom';
 
 const EmployeeList = () => {
@@ -14,10 +14,7 @@ const EmployeeList = () => {
 
   const fetchEmployees = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/employees', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get('/api/employees');
       setEmployees(response.data.data || []);
     } catch (err) {
       setError(err.message);
@@ -29,10 +26,7 @@ const EmployeeList = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this employee?')) {
       try {
-        const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/employees/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await api.delete(`/api/employees/${id}`);
         alert('Employee deleted successfully');
         fetchEmployees();
       } catch (err) {

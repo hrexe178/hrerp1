@@ -1,6 +1,6 @@
 // Project management component
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { Link } from 'react-router-dom';
 
 const ProjectManagement = () => {
@@ -14,10 +14,7 @@ const ProjectManagement = () => {
 
   const fetchProjects = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/projects', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get('/api/projects');
       setProjects(response.data.data || []);
     } catch (err) {
       setError(err.message);
@@ -29,10 +26,7 @@ const ProjectManagement = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
       try {
-        const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/projects/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await api.delete(`/api/projects/${id}`);
         alert('Project deleted successfully');
         fetchProjects();
       } catch (err) {

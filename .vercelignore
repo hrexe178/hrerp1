@@ -1,0 +1,13 @@
+node_modules
+.env
+.env.local
+.git
+*.log
+.DS_Store
+frontend/node_modules
+frontend/build
+backend/node_modules
+DEBUG_GUIDE.md
+VERCEL_DEPLOYMENT.md
+VERCEL_READY.md
+update-api-imports.ps1

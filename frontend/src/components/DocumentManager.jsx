@@ -1,6 +1,6 @@
 // Document manager component
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const DocumentManager = () => {
   const [documents, setDocuments] = useState([]);
@@ -21,10 +21,7 @@ const DocumentManager = () => {
 
   const fetchDocuments = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/documents', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get('/api/documents');
       setDocuments(response.data.data || []);
     } catch (err) {
       setError(err.message);
@@ -40,8 +37,6 @@ const DocumentManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-
       // Prepare data - remove empty optional fields
       const dataToSend = { ...formData };
       if (!dataToSend.employee || dataToSend.employee === '') {
@@ -53,9 +48,7 @@ const DocumentManager = () => {
 
       console.log('Sending document data:', dataToSend);
 
-      await axios.post('http://localhost:5000/api/documents', dataToSend, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post('/api/documents', dataToSend);
       alert('Document uploaded successfully');
       setFormData({
         name: '',

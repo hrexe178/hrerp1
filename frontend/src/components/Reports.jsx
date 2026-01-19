@@ -1,6 +1,6 @@
 // Analytics & reports component
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const Reports = () => {
   const [reportData, setReportData] = useState({
@@ -14,11 +14,10 @@ const Reports = () => {
   useEffect(() => {
     const fetchReportData = async () => {
       try {
-        const token = localStorage.getItem('token');
         const [employees, attendance, projects] = await Promise.all([
-          axios.get('http://localhost:5000/api/employees', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:5000/api/attendance', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:5000/api/projects', { headers: { Authorization: `Bearer ${token}` } }),
+          api.get('/api/employees'),
+          api.get('/api/attendance'),
+          api.get('/api/projects'),
         ]);
 
         // Extract data arrays from API responses

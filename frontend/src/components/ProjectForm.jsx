@@ -1,6 +1,6 @@
 // Add/Edit project form component
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const ProjectForm = () => {
@@ -33,10 +33,7 @@ const ProjectForm = () => {
 
   const fetchEmployees = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/employees', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get('/api/employees');
       setEmployees(response.data.data || []);
     } catch (error) {
       console.error('Error fetching employees:', error);
@@ -45,10 +42,7 @@ const ProjectForm = () => {
 
   const fetchProject = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/projects/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.get(`/api/projects/${id}`);
       const proj = response.data.data || response.data;
       setFormData({
         name: proj.name || '',
@@ -83,7 +77,6 @@ const ProjectForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
 
       // Prepare data - ensure dates are proper Date objects and budget fields are numbers
       const dataToSend = {
@@ -121,14 +114,10 @@ const ProjectForm = () => {
       }
 
       if (id) {
-        await axios.put(`http://localhost:5000/api/projects/${id}`, dataToSend, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await api.put(`/api/projects/${id}`, dataToSend);
         alert('Project updated successfully');
       } else {
-        await axios.post('http://localhost:5000/api/projects', dataToSend, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await api.post('/api/projects', dataToSend);
         alert('Project created successfully');
       }
       navigate('/projects');
