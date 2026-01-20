@@ -1,13 +1,29 @@
+# Dependencies
 node_modules
+frontend/node_modules
+
+# Environment files
 .env
 .env.local
+
+# Git
 .git
+
+# Logs
 *.log
+
+# OS files
 .DS_Store
-frontend/node_modules
-frontend/build
-backend/node_modules
+
+# Backend (not deploying to this Vercel project)
+backend
+
+# Documentation
 DEBUG_GUIDE.md
 VERCEL_DEPLOYMENT.md
 VERCEL_READY.md
+*.md
+
+# Scripts
 update-api-imports.ps1
+*.ps1
