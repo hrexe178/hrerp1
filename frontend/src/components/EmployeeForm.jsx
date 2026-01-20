@@ -80,7 +80,6 @@ const EmployeeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       const submitData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
