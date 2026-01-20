@@ -1,3 +1,11 @@
-# Ignore everything - this project is for localhost development only
-*
-!vercel.json
+# Vercel Ignore
+node_modules
+.env
+.env.local
+.git
+*.log
+.DS_Store
+
+# Keep these for deployment
+!frontend/build
+!backend
