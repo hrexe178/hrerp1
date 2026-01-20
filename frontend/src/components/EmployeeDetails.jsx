@@ -1,6 +1,6 @@
 // Employee profile/details component
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { API_URL } from '../config/api';
 import { useParams } from 'react-router-dom';
 
 const EmployeeDetails = () => {
@@ -13,7 +13,7 @@ const EmployeeDetails = () => {
     const fetchEmployee = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:5000/api/employees/${id}`, {
+        const response = await axios.get(`${API_URL}/api/employees/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setEmployee(response.data.data || response.data);
@@ -41,7 +41,7 @@ const EmployeeDetails = () => {
         <p><strong>Phone:</strong> {employee.phone || 'N/A'}</p>
         <p><strong>Date of Birth:</strong> {employee.dateOfBirth ? new Date(employee.dateOfBirth).toLocaleDateString() : 'N/A'}</p>
         <p><strong>Gender:</strong> {employee.gender || 'N/A'}</p>
-        
+
         <h3>Professional Information</h3>
         <p><strong>Position:</strong> {employee.position || 'N/A'}</p>
         <p><strong>Department:</strong> {employee.department}</p>
@@ -50,18 +50,18 @@ const EmployeeDetails = () => {
         <p><strong>Joining Date:</strong> {new Date(employee.joiningDate).toLocaleDateString()}</p>
         <p><strong>Work Location:</strong> {employee.workLocation || 'N/A'}</p>
         <p><strong>Employment Status:</strong> {employee.employmentStatus || employee.status}</p>
-        
+
         <h3>Compensation</h3>
         <p><strong>Salary:</strong> {employee.salary ? `${employee.currency || 'INR'} ${employee.salary}` : 'N/A'}</p>
         <p><strong>Payment Frequency:</strong> {employee.paymentFrequency || 'N/A'}</p>
-        
+
         <h3>Address</h3>
         <p><strong>Street:</strong> {employee.address?.street || 'N/A'}</p>
         <p><strong>City:</strong> {employee.address?.city || 'N/A'}</p>
         <p><strong>State:</strong> {employee.address?.state || 'N/A'}</p>
         <p><strong>Country:</strong> {employee.address?.country || 'N/A'}</p>
         <p><strong>Pin Code:</strong> {employee.address?.pin || 'N/A'}</p>
-        
+
         <h3>Emergency Contact</h3>
         <p><strong>Name:</strong> {employee.emergencyContact?.name || 'N/A'}</p>
         <p><strong>Phone:</strong> {employee.emergencyContact?.phone || 'N/A'}</p>

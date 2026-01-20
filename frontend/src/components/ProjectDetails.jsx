@@ -1,7 +1,8 @@
 // Project details component
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -13,7 +14,7 @@ const ProjectDetails = () => {
     const fetchProject = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:5000/api/projects/${id}`, {
+        const response = await axios.get(`${API_URL}/api/projects/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProject(response.data.data || response.data);

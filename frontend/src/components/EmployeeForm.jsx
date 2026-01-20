@@ -1,7 +1,7 @@
-// Add/Edit employee form component
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 const EmployeeForm = () => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const EmployeeForm = () => {
       const fetchEmployee = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get(`http://localhost:5000/api/employees/${id}`, {
+          const response = await axios.get(`${API_URL}/api/employees/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const emp = response.data.data || response.data;
@@ -116,13 +116,13 @@ const EmployeeForm = () => {
         employmentStatus: formData.status,
       };
       if (id) {
-        await axios.put(`http://localhost:5000/api/employees/${id}`, submitData, {
+        await axios.put(`${API_URL}/api/employees/${id}`, submitData, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert('Employee updated successfully');
         navigate('/employees');
       } else {
-        const response = await axios.post('http://localhost:5000/api/employees', submitData, {
+        const response = await axios.post(`${API_URL}/api/employees`, submitData, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data.credentials) {
