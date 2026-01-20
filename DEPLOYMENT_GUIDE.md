@@ -50,7 +50,7 @@
 - [ ] XSS protection (React escapes by default)
 - [ ] Admin password changed from default
 
-## 🚀 Deploy to Vercel - Step by Step
+## 🚀 Deploy Backend to Vercel and Frontend to Netlify - Step by Step
 
 ### Step 1: Push Code to GitHub
 ```bash
@@ -104,7 +104,29 @@ git push -u origin main
 6. Should see: {"message": "Server is running!", "timestamp": "..."}
 ```
 
-### Step 6: First-Time Setup on Production
+### Step 6: Deploy Frontend to Netlify
+
+1. Go to [netlify.com](https://netlify.com)
+2. Sign up/Log in with GitHub account
+3. Click "Add new site" → "Import an existing project"
+4. Connect to your GitHub repository
+5. Configure build settings:
+   - **Base directory**: `frontend`
+   - **Build command**: `npm run build`
+   - **Publish directory**: `build`
+6. Add environment variables:
+   ```
+   REACT_APP_API_URL = https://[your-vercel-backend-url].vercel.app
+   ```
+7. Click "Deploy site"
+8. Wait for deployment to complete
+9. Your frontend will be available at `https://[random-name].netlify.app`
+
+### Step 7: Update Backend CORS (if needed)
+- In Vercel backend environment variables, set `FRONTEND_URL` to your Netlify URL
+- Redeploy backend if changed
+
+### Step 8: First-Time Setup on Production
 1. Access admin panel with default credentials
 2. Change admin password immediately
 3. Create at least one HR user account
