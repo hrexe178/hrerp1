@@ -18,8 +18,23 @@ const app = express();
 connectDB();
 
 // Middleware
+// Allowed origins
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://hrerpabhiroom.netlify.app',
+  'https://wonderful-haupia-647cea.netlify.app',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('Blocked by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '50mb' }));
