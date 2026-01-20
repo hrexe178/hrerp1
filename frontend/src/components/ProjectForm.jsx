@@ -29,6 +29,7 @@ const ProjectForm = () => {
     if (id) {
       fetchProject();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchEmployees = async () => {
