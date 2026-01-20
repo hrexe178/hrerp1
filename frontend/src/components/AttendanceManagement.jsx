@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_URL } from '../config/api';
+import api from '../utils/api';
 
 const AttendanceManagement = () => {
   const [attendance, setAttendance] = useState([]);
@@ -25,14 +24,9 @@ const AttendanceManagement = () => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('token');
       const [attendanceRes, employeesRes] = await Promise.all([
-        axios.get(`${API_URL}/api/attendance`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get(`${API_URL}/api/employees`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
+        api.get('/api/attendance'),
+        api.get('/api/employees'),
       ]);
       setAttendance(attendanceRes.data.data || []);
       setEmployees(employeesRes.data.data || []);
@@ -78,10 +72,7 @@ const AttendanceManagement = () => {
       return;
     }
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`${API_URL}/api/attendance`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post('/api/attendance', formData);
       alert('Attendance marked successfully');
       setFormData({
         employee: '',

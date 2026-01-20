@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_URL } from '../config/api';
+import api from '../utils/api';
 import { useParams } from 'react-router-dom';
 
 const EmployeeDetails = () => {
@@ -12,10 +11,7 @@ const EmployeeDetails = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_URL}/api/employees/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.get(`/api/employees/${id}`);
         setEmployee(response.data.data || response.data);
       } catch (err) {
         setError(err.message);

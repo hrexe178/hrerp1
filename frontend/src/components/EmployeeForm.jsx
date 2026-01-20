@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { useNavigate, useParams } from 'react-router-dom';
-import { API_URL } from '../config/api';
 
 const EmployeeForm = () => {
   const navigate = useNavigate();
@@ -38,10 +37,7 @@ const EmployeeForm = () => {
     if (id) {
       const fetchEmployee = async () => {
         try {
-          const token = localStorage.getItem('token');
-          const response = await axios.get(`${API_URL}/api/employees/${id}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await api.get(`/api/employees/${id}`);
           const emp = response.data.data || response.data;
           setFormData({
             firstName: emp.firstName || '',
@@ -116,15 +112,11 @@ const EmployeeForm = () => {
         employmentStatus: formData.status,
       };
       if (id) {
-        await axios.put(`${API_URL}/api/employees/${id}`, submitData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await api.put(`/api/employees/${id}`, submitData);
         alert('Employee updated successfully');
         navigate('/employees');
       } else {
-        const response = await axios.post(`${API_URL}/api/employees`, submitData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await api.post('/api/employees', submitData);
         if (response.data.credentials) {
           setCredentials(response.data.credentials);
         } else {
@@ -133,6 +125,10 @@ const EmployeeForm = () => {
       }
     } catch (error) {
       console.error('Error saving employee:', error);
+      const errorMsg = error.response?.data?.errors
+        ? error.response.data.errors.map((e) => e.msg).join(', ')
+        : error.response?.data?.message || 'Error saving employee';
+      alert(errorMsg);
     }
   };
 
