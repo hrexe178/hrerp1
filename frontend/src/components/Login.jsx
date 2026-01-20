@@ -80,13 +80,7 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="login-footer">
-          <p className="test-credentials">
-            <strong>Demo Credentials:</strong><br />
-            Email: admin@hrerp.com<br />
-            Password: admin123
-          </p>
-        </div>
+
       </div>
     </div>
   );
