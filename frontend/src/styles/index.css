@@ -618,55 +618,145 @@ tbody tr:hover {
 @media (max-width: 768px) {
   .navbar-container {
     flex-direction: column;
-    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .nav-brand {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hamburger {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+  }
+
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .hamburger.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
   }
 
   .nav-menu {
+    display: none;
     flex-direction: column;
     width: 100%;
     margin-left: 0;
-    gap: 1.5rem;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  .nav-menu.active {
+    display: flex;
   }
 
   .nav-items {
     flex-direction: column;
-    gap: 1rem;
     width: 100%;
+    gap: 0.5rem;
   }
 
   .nav-link {
     width: 100%;
-    text-align: center;
+    text-align: left;
+    padding: 0.75rem;
+    background-color: #374151;
   }
 
   .nav-user {
     flex-direction: column;
     width: 100%;
-    align-items: center;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #374151;
   }
 
+  .user-info-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .user-name, .user-role {
+    color: white;
+  }
+
+  .logout-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Dashboard Mobile */
   .dashboard-header {
     flex-direction: column;
-    gap: 1rem;
     align-items: flex-start;
+    gap: 1rem;
   }
 
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
 
-  .quick-actions {
+  .dashboard-sections {
     grid-template-columns: 1fr;
+  }
+
+  .quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Tables Mobile */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 600px; /* Ensure table doesn't squish */
   }
 
   .login-container {
     padding: 2rem 1.5rem;
-    border-radius: 0;
+    width: 90%;
   }
 
-  h1 { font-size: 2rem; }
+  h1 { font-size: 1.75rem; }
   h2 { font-size: 1.5rem; }
 }
+
+@media (min-width: 769px) {
+  .hamburger {
+    display: none;
+  }
+  
+  .nav-brand {
+    display: flex;
+    align-items: center;
+  }
+}
+
 
 /* Credentials Modal */
 .credentials-modal {
