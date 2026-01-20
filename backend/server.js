@@ -23,6 +23,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://hrerpabhiroom.netlify.app',
   'https://wonderful-haupia-647cea.netlify.app',
+  'https://hrerp1-dgfq.vercel.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
