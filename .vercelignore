@@ -1,0 +1,3 @@
+# Ignore everything - this project is for localhost development only
+*
+!vercel.json
