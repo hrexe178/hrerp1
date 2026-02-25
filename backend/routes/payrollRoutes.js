@@ -106,7 +106,7 @@ router.get('/mine', protect, async (req, res, next) => {
   try {
     const employee = await Employee.findOne({ user: req.user.id });
     if (!employee) {
-      return res.status(404).json({ success: false, message: 'Employee profile not found' });
+      return res.json({ success: true, count: 0, total: 0, page: 1, pages: 1, data: [] });
     }
 
     const { page, limit, skip } = parsePagination(req.query);
