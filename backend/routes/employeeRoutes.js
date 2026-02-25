@@ -18,7 +18,7 @@ router.get('/', protect, adminOrHR, asyncHandler(async (req, res) => {
   if (department) filter.department = department;
 
   const result = await employeeService.getAllEmployees(filter, { page, limit });
-  res.json({ success: true, ...result });
+  res.json({ success: true, data: result.employees, count: result.count, totalPages: result.totalPages, currentPage: result.currentPage });
 }));
 
 // @route   POST /api/employees
