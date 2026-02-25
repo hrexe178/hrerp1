@@ -22,7 +22,10 @@ const Reports = () => {
       ]);
 
       const summaryData = summaryResp.data?.data || {};
-      const deptData = Object.entries(summaryData.byDepartment || {}).map(([name, value]) => ({ name, value }));
+      const deptData = (summaryData.byDepartment || []).map(dept => ({
+        name: dept._id || 'Unassigned',
+        value: dept.count || 0
+      }));
       const projectData = (projectsResp.data?.data || []).map(p => ({
         name: p.projectName,
         progress: p.progressPercentage || 0
