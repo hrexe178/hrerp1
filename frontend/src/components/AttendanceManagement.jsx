@@ -1,197 +1,205 @@
 import React, { useEffect, useState } from 'react';
 import api from '../utils/api';
+import { formatDate } from '../utils/helpers';
+import { toast } from 'react-toastify';
+import Modal from './Modal';
 
 const AttendanceManagement = () => {
-  const [attendance, setAttendance] = useState([]);
   const [employees, setEmployees] = useState([]);
-  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [attendanceRecords, setAttendanceRecords] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchInput, setSearchInput] = useState('');
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [formData, setFormData] = useState({
-    employee: '',
-    date: new Date().toISOString().split('T')[0],
+  const [filterDate, setFilterDate] = useState(new Date().toISOString().split('T')[0]);
+
+  // Single marking state
+  const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [status, setStatus] = useState('Present');
+  const [checkIn, setCheckIn] = useState('09:00');
+  const [checkOut, setCheckOut] = useState('18:00');
+
+  // Bulk marking state
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [bulkConfig, setBulkConfig] = useState({
     status: 'Present',
-    checkInTime: '',
-    checkOutTime: '',
-    remarks: '',
+    date: new Date().toISOString().split('T')[0],
+    category: 'All'
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchEmployees = async () => {
     try {
-      const [attendanceRes, employeesRes] = await Promise.all([
-        api.get('/api/attendance'),
-        api.get('/api/employees'),
-      ]);
-      setAttendance(attendanceRes.data.data || []);
-      setEmployees(employeesRes.data.data || []);
+      const res = await api.get('/api/employees?limit=500');
+      setEmployees(res.data.data || []);
     } catch (err) {
-      setError(err.message);
+      toast.error('Error fetching employees');
+    }
+  };
+
+  const fetchAttendance = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get(`/api/attendance?startDate=${filterDate}&endDate=${filterDate}`);
+      setAttendanceRecords(res.data.data || []);
+    } catch (err) {
+      toast.error('Error fetching attendance records');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchInput(value);
-
-    if (value.length >= 3) {
-      const filtered = employees.filter(
-        (emp) =>
-          emp.firstName.toLowerCase().includes(value.toLowerCase()) ||
-          emp.lastName.toLowerCase().includes(value.toLowerCase()) ||
-          emp.employeeId.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredEmployees(filtered);
-    } else {
-      setFilteredEmployees([]);
-    }
-  };
-
-  const handleSelectEmployee = (emp) => {
-    setSelectedEmployee(emp);
-    setSearchInput(`${emp.firstName} ${emp.lastName} (${emp.employeeId})`);
-    setFormData({ ...formData, employee: emp._id });
-    setFilteredEmployees([]);
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    fetchEmployees();
+    fetchAttendance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterDate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.employee) {
-      alert('Please select an employee');
-      return;
-    }
+    if (!selectedEmployee) return toast.error('Please select an employee');
+
     try {
-      await api.post('/api/attendance', formData);
-      alert('Attendance marked successfully');
-      setFormData({
-        employee: '',
-        date: new Date().toISOString().split('T')[0],
-        status: 'Present',
-        checkInTime: '',
-        checkOutTime: '',
-        remarks: '',
+      await api.post('/api/attendance', {
+        employee: selectedEmployee,
+        date: filterDate,
+        status,
+        checkInTime: status === 'Present' ? checkIn : undefined,
+        checkOutTime: status === 'Present' ? checkOut : undefined,
+        location: 'Office'
       });
-      setSearchInput('');
-      setSelectedEmployee(null);
-      fetchData();
-    } catch (error) {
-      console.error('Error marking attendance:', error);
-      alert('Error marking attendance: ' + (error.response?.data?.message || error.message));
+      toast.success('Attendance marked successfully');
+      fetchAttendance();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to mark attendance');
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const handleBulkSubmit = async () => {
+    try {
+      const employeesToMark = employees.map(e => e._id);
+      await api.post('/api/attendance/bulk', {
+        employees: employeesToMark,
+        date: bulkConfig.date,
+        status: bulkConfig.status
+      });
+      toast.success('Bulk attendance processed');
+      setShowBulkModal(false);
+      fetchAttendance();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Bulk marking failed');
+    }
+  };
 
   return (
-    <div className="attendance-management">
-      <h1>Attendance Management</h1>
-      <form onSubmit={handleSubmit} className="attendance-form">
-        <div className="form-group">
-          <label>Employee (Start typing name or ID)</label>
-          <div className="search-container">
-            <input
-              type="text"
-              placeholder="Search employee by name or ID (min 3 chars)"
-              value={searchInput}
-              onChange={handleSearchChange}
-              required={!selectedEmployee}
-            />
-            {filteredEmployees.length > 0 && (
-              <ul className="suggestions-dropdown">
-                {filteredEmployees.map((emp) => (
-                  <li key={emp._id} onClick={() => handleSelectEmployee(emp)}>
-                    {emp.firstName} {emp.lastName} ({emp.employeeId})
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          {selectedEmployee && (
-            <p style={{ marginTop: '5px', color: 'green' }}>
-              ✓ Selected: {selectedEmployee.firstName} {selectedEmployee.lastName}
-            </p>
-          )}
+    <div className="attendance-management animate-fade-in">
+      <div className="page-header">
+        <h2>Attendance Tracking</h2>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button className="btn btn-secondary" onClick={() => setShowBulkModal(true)}>Bulk Mark Today</button>
+          <input
+            type="date"
+            value={filterDate}
+            onChange={(e) => setFilterDate(e.target.value)}
+            className="date-picker-compact"
+          />
         </div>
+      </div>
 
-        <input
-          type="date"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
-        />
+      <div className="admin-grid-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem' }}>
+        <section className="glass-card">
+          <h3>Mark Single Entry</h3>
+          <form onSubmit={handleSubmit} className="form-container">
+            <div className="form-group">
+              <label>Employee</label>
+              <select value={selectedEmployee} onChange={(e) => setSelectedEmployee(e.target.value)}>
+                <option value="">Choose Employee...</option>
+                {employees.map(emp => (
+                  <option key={emp._id} value={emp._id}>{emp.firstName} {emp.lastName} ({emp.employeeId})</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Status</label>
+              <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+                <option value="Half-Day">Half-Day</option>
+                <option value="Holiday">Holiday</option>
+              </select>
+            </div>
+            {status === 'Present' && (
+              <div className="grid-2-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div className="form-group">
+                  <label>In</label>
+                  <input type="time" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label>Out</label>
+                  <input type="time" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+                </div>
+              </div>
+            )}
+            <button type="submit" className="btn-primary full-width-btn">Save Record</button>
+          </form>
+        </section>
 
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="Present">Present</option>
-          <option value="Absent">Absent</option>
-          <option value="Half-Day">Half Day</option>
-          <option value="Leave">Leave</option>
-          <option value="Holiday">Holiday</option>
-          <option value="Weekend">Weekend</option>
-        </select>
+        <section className="glass-card">
+          <h3>Attendance List - {formatDate(filterDate)}</h3>
+          <div className="table-container">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Status</th>
+                  <th>In/Out</th>
+                  <th>Work Hours</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan="4" className="loading">Updating records...</td></tr>
+                ) : attendanceRecords.length > 0 ? attendanceRecords.map(record => (
+                  <tr key={record._id}>
+                    <td><strong>{record.employee?.firstName} {record.employee?.lastName}</strong><br /><small>{record.employee?.department}</small></td>
+                    <td>
+                      <span className={`status-badge ${record.status.toLowerCase().replace(' ', '-')}`}>
+                        {record.status}
+                      </span>
+                    </td>
+                    <td>{record.checkInTime || '--'} - {record.checkOutTime || '--'}</td>
+                    <td>{record.workHours || '0'} hrs</td>
+                  </tr>
+                )) : (
+                  <tr><td colSpan="4" style={{ textAlign: 'center' }}>No records found for this date.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
 
-        <input
-          type="time"
-          name="checkInTime"
-          value={formData.checkInTime}
-          onChange={handleChange}
-        />
-
-        <input
-          type="time"
-          name="checkOutTime"
-          value={formData.checkOutTime}
-          onChange={handleChange}
-        />
-
-        <input
-          type="text"
-          name="remarks"
-          placeholder="Remarks"
-          value={formData.remarks}
-          onChange={handleChange}
-        />
-
-        <button type="submit">Mark Attendance</button>
-      </form>
-
-      <h2>Attendance Records</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Employee</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Check In</th>
-            <th>Check Out</th>
-            <th>Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          {attendance.map((record) => (
-            <tr key={record._id}>
-              <td>{record.employee?.firstName} {record.employee?.lastName}</td>
-              <td>{new Date(record.date).toLocaleDateString()}</td>
-              <td>{record.status}</td>
-              <td>{record.checkInTime || '-'}</td>
-              <td>{record.checkOutTime || '-'}</td>
-              <td>{record.remarks || '-'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Bulk Modal */}
+      <Modal
+        isOpen={showBulkModal}
+        onClose={() => setShowBulkModal(false)}
+        title="Bulk Mark Attendance"
+        footer={
+          <>
+            <button className="btn btn-secondary" onClick={() => setShowBulkModal(false)}>Cancel</button>
+            <button className="btn btn-primary" onClick={handleBulkSubmit}>Execute Bulk Marking</button>
+          </>
+        }
+      >
+        <div className="form-container">
+          <p>Mark all active employees as <strong>{bulkConfig.status}</strong> for <strong>{formatDate(bulkConfig.date)}</strong>.</p>
+          <div className="form-group">
+            <label>Target Status</label>
+            <select value={bulkConfig.status} onChange={(e) => setBulkConfig({ ...bulkConfig, status: e.target.value })}>
+              <option value="Present">Present (Shift Default)</option>
+              <option value="Absent">Absent</option>
+              <option value="Holiday">Public Holiday</option>
+            </select>
+          </div>
+          <p className="text-muted" style={{ fontSize: '0.8rem' }}>Note: This will skip employees who already have a record for this date.</p>
+        </div>
+      </Modal>
     </div>
   );
 };

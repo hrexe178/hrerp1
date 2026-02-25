@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const EmployeeForm = () => {
   const navigate = useNavigate();
@@ -31,6 +32,10 @@ const EmployeeForm = () => {
     emergencyContactPhone: '',
     emergencyContactRelationship: '',
     status: 'Active',
+    onboardingStatus: 'Pending',
+    offboardingStatus: 'Not Started',
+    exitDate: '',
+    exitReason: '',
   });
 
   useEffect(() => {
@@ -64,6 +69,10 @@ const EmployeeForm = () => {
             emergencyContactPhone: emp.emergencyContact?.phone || '',
             emergencyContactRelationship: emp.emergencyContact?.relationship || '',
             status: emp.employmentStatus || 'Active',
+            onboardingStatus: emp.onboardingStatus || 'Pending',
+            offboardingStatus: emp.offboardingStatus || 'Not Started',
+            exitDate: emp.exitDate ? emp.exitDate.split('T')[0] : '',
+            exitReason: emp.exitReason || '',
           });
         } catch (error) {
           console.error('Error fetching employee:', error);
@@ -109,10 +118,14 @@ const EmployeeForm = () => {
           relationship: formData.emergencyContactRelationship,
         },
         employmentStatus: formData.status,
+        onboardingStatus: formData.onboardingStatus,
+        offboardingStatus: formData.offboardingStatus,
+        exitDate: formData.exitDate || undefined,
+        exitReason: formData.exitReason,
       };
       if (id) {
         await api.put(`/api/employees/${id}`, submitData);
-        alert('Employee updated successfully');
+        toast.success('Employee updated successfully');
         navigate('/employees');
       } else {
         const response = await api.post('/api/employees', submitData);
@@ -127,7 +140,7 @@ const EmployeeForm = () => {
       const errorMsg = error.response?.data?.errors
         ? error.response.data.errors.map((e) => e.msg).join(', ')
         : error.response?.data?.message || 'Error saving employee';
-      alert(errorMsg);
+      toast.error(errorMsg);
     }
   };
 
@@ -345,9 +358,50 @@ const EmployeeForm = () => {
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
           <option value="On-Leave">On Leave</option>
-          <option value="Fired">Fired</option>
           <option value="Terminated">Terminated</option>
         </select>
+
+        <h3>Lifecycle Management</h3>
+        <select
+          name="onboardingStatus"
+          value={formData.onboardingStatus}
+          onChange={handleChange}
+        >
+          <option value="Pending">Onboarding: Pending</option>
+          <option value="In-Progress">Onboarding: In-Progress</option>
+          <option value="Completed">Onboarding: Completed</option>
+        </select>
+
+        <select
+          name="offboardingStatus"
+          value={formData.offboardingStatus}
+          onChange={handleChange}
+        >
+          <option value="Not Started">Offboarding: Not Started</option>
+          <option value="Initiated">Offboarding: Initiated</option>
+          <option value="In-Progress">Offboarding: In-Progress</option>
+          <option value="Completed">Offboarding: Completed</option>
+        </select>
+
+        {formData.offboardingStatus !== 'Not Started' && (
+          <>
+            <input
+              type="date"
+              name="exitDate"
+              placeholder="Exit Date"
+              value={formData.exitDate}
+              onChange={handleChange}
+            />
+            <textarea
+              name="exitReason"
+              placeholder="Exit Reason / Notes"
+              value={formData.exitReason}
+              onChange={handleChange}
+              rows="3"
+            />
+          </>
+        )}
+
         <button type="submit">Submit</button>
       </form>
     </div>

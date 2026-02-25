@@ -31,6 +31,7 @@ const employeeSchema = new mongoose.Schema(
     joiningDate: { type: Date, required: true },
     workLocation: String,
     reportingManager: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+    assignedShift: { type: mongoose.Schema.Types.ObjectId, ref: 'Shift' },
     employmentStatus: { type: String, enum: ['Active', 'Inactive', 'On-Leave', 'Terminated'], default: 'Active' },
 
     // Compensation
@@ -91,6 +92,33 @@ const employeeSchema = new mongoose.Schema(
     // User Reference
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     profileImage: String,
+    leaveBalance: {
+      sick: { type: Number, default: 12 },
+      casual: { type: Number, default: 10 },
+      paid: { type: Number, default: 21 },
+      unpaid: { type: Number, default: 0 },
+    },
+
+    // Lifecycle
+    onboardingStatus: {
+      type: String,
+      enum: ['Pending', 'In-Progress', 'Completed'],
+      default: 'Pending',
+    },
+    offboardingStatus: {
+      type: String,
+      enum: ['Not Started', 'Initiated', 'In-Progress', 'Completed'],
+      default: 'Not Started',
+    },
+    exitDate: Date,
+    exitReason: String,
+    lifecycleNotes: [
+      {
+        date: { type: Date, default: Date.now },
+        note: String,
+        addedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      }
+    ],
   },
   { timestamps: true }
 );
@@ -103,5 +131,11 @@ employeeSchema.pre('save', async function (next) {
   }
   next();
 });
+
+// Indexes for performance
+employeeSchema.index({ user: 1 });
+employeeSchema.index({ reportingManager: 1 });
+employeeSchema.index({ department: 1 });
+employeeSchema.index({ employmentStatus: 1 });
 
 module.exports = mongoose.model('Employee', employeeSchema);

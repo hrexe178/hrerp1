@@ -51,6 +51,16 @@ const EmployeeDetails = () => {
         <p><strong>Salary:</strong> {employee.salary ? `${employee.currency || 'INR'} ${employee.salary}` : 'N/A'}</p>
         <p><strong>Payment Frequency:</strong> {employee.paymentFrequency || 'N/A'}</p>
 
+        <h3>Lifecycle Management</h3>
+        <p><strong>Onboarding Status:</strong> {employee.onboardingStatus || 'Pending'}</p>
+        <p><strong>Offboarding Status:</strong> {employee.offboardingStatus || 'Not Started'}</p>
+        {employee.offboardingStatus !== 'Not Started' && (
+          <>
+            <p><strong>Exit Date:</strong> {employee.exitDate ? new Date(employee.exitDate).toLocaleDateString() : 'N/A'}</p>
+            <p><strong>Exit Reason:</strong> {employee.exitReason || 'N/A'}</p>
+          </>
+        )}
+
         <h3>Address</h3>
         <p><strong>Street:</strong> {employee.address?.street || 'N/A'}</p>
         <p><strong>City:</strong> {employee.address?.city || 'N/A'}</p>

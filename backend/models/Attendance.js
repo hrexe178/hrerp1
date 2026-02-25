@@ -13,6 +13,9 @@ const attendanceSchema = new mongoose.Schema(
     checkOutTime: String,
     workHours: Number,
     overtimeHours: Number,
+    lateByMinutes: Number,
+    expectedCheckInTime: String,
+    expectedCheckOutTime: String,
     location: { type: String, enum: ['Office', 'Remote', 'Field', 'Client Site'] },
 
     // Leave details

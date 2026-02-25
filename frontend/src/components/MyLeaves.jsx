@@ -1,0 +1,127 @@
+import React, { useEffect, useState } from 'react';
+import api from '../utils/api';
+import { formatDate } from '../utils/helpers';
+
+const MyLeaves = () => {
+  const [rows, setRows] = useState([]);
+  const [formData, setFormData] = useState({
+    leaveType: 'Sick',
+    fromDate: '',
+    toDate: '',
+    reason: '',
+    isHalfDay: false,
+    halfDaySlot: '',
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+
+  const fetchLeaves = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/api/leaves/mine?limit=100');
+      setRows(response.data.data || []);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to load leaves');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeaves();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setSaving(true);
+      setError('');
+      setMessage('');
+      await api.post('/api/leaves', formData);
+      setMessage('Leave request submitted');
+      setFormData({
+        leaveType: 'Sick',
+        fromDate: '',
+        toDate: '',
+        reason: '',
+        isHalfDay: false,
+        halfDaySlot: '',
+      });
+      fetchLeaves();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to submit leave request');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="employee-list">
+      <h2>My Leaves</h2>
+      {error && <div className="error">{error}</div>}
+      {message && <div className="success-message">{message}</div>}
+
+      <form onSubmit={handleSubmit}>
+        <select value={formData.leaveType} onChange={(e) => setFormData((p) => ({ ...p, leaveType: e.target.value }))}>
+          <option value="Sick">Sick</option>
+          <option value="Casual">Casual</option>
+          <option value="Paid">Paid</option>
+          <option value="Unpaid">Unpaid</option>
+          <option value="Maternity">Maternity</option>
+          <option value="Paternity">Paternity</option>
+          <option value="Compensatory">Compensatory</option>
+        </select>
+        <input type="date" value={formData.fromDate} onChange={(e) => setFormData((p) => ({ ...p, fromDate: e.target.value }))} required />
+        <input type="date" value={formData.toDate} onChange={(e) => setFormData((p) => ({ ...p, toDate: e.target.value }))} required />
+        <textarea placeholder="Reason" value={formData.reason} onChange={(e) => setFormData((p) => ({ ...p, reason: e.target.value }))} required />
+        <label>
+          <input type="checkbox" checked={formData.isHalfDay} onChange={(e) => setFormData((p) => ({ ...p, isHalfDay: e.target.checked }))} />
+          Half day
+        </label>
+        {formData.isHalfDay && (
+          <select value={formData.halfDaySlot} onChange={(e) => setFormData((p) => ({ ...p, halfDaySlot: e.target.value }))}>
+            <option value="">Select half day slot</option>
+            <option value="First Half">First Half</option>
+            <option value="Second Half">Second Half</option>
+          </select>
+        )}
+        <button type="submit" disabled={saving}>{saving ? 'Submitting...' : 'Apply Leave'}</button>
+      </form>
+
+      {loading ? (
+        <div>Loading leaves...</div>
+      ) : (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Days</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row._id}>
+                <td data-label="Type">{row.leaveType}</td>
+                <td data-label="From">{formatDate(row.fromDate)}</td>
+                <td data-label="To">{formatDate(row.toDate)}</td>
+                <td data-label="Days">{row.totalDays}</td>
+                <td data-label="Status">
+                  <span className={`status-badge ${row.status === 'Manager Approved' ? 'status-manager-approved' : row.status.toLowerCase()}`}>
+                    {row.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+};
+
+export default MyLeaves;

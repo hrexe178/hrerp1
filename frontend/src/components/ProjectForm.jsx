@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const ProjectForm = () => {
   const navigate = useNavigate();
@@ -116,10 +117,10 @@ const ProjectForm = () => {
 
       if (id) {
         await api.put(`/api/projects/${id}`, dataToSend);
-        alert('Project updated successfully');
+        toast.success('Project updated successfully');
       } else {
         await api.post('/api/projects', dataToSend);
-        alert('Project created successfully');
+        toast.success('Project created successfully');
       }
       navigate('/projects');
     } catch (error) {
@@ -127,7 +128,7 @@ const ProjectForm = () => {
       const errorMsg = error.response?.data?.errors
         ? error.response.data.errors.map((e) => e.msg).join(', ')
         : error.response?.data?.message || error.message;
-      alert('Error saving project: ' + errorMsg);
+      toast.error('Error saving project: ' + errorMsg);
     } finally {
       setLoading(false);
     }

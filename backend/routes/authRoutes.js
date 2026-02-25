@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const Employee = require('../models/Employee');
 const { protect } = require('../middleware/auth');
+const { logAction } = require('../services/auditService');
 
 // @route   POST /api/auth/register
 // @desc    Register a user
@@ -24,6 +25,15 @@ router.post(
 
     try {
       const { firstName, lastName, email, password, role } = req.body;
+      const allowedPublicRoles = ['employee', 'manager'];
+      const requestedRole = role || 'employee';
+
+      if (!allowedPublicRoles.includes(requestedRole)) {
+        return res.status(403).json({
+          success: false,
+          message: 'Cannot self-assign this role',
+        });
+      }
 
       // Check if user already exists
       let user = await User.findOne({ email });
@@ -37,12 +47,13 @@ router.post(
         lastName,
         email,
         password,
-        role: role || 'employee',
+        role: requestedRole,
       });
 
       await user.save();
 
       const token = user.getSignedJwtToken();
+      await logAction(req, 'CREATE', 'User', user._id, null, { email: user.email, role: user.role }, user.email);
 
       res.status(201).json({
         success: true,
@@ -95,6 +106,7 @@ router.post(
       // Update last login
       user.lastLogin = new Date();
       await user.save();
+      await logAction(req, 'LOGIN', 'User', user._id, null, { email: user.email, role: user.role }, user.email);
 
       // Get employee details if exists
       const employee = await Employee.findOne({ user: user._id });
@@ -148,6 +160,7 @@ router.get('/me', protect, async (req, res, next) => {
 // @desc    Logout user
 // @access  Private
 router.post('/logout', protect, (req, res) => {
+  logAction(req, 'LOGOUT', 'User', req.user.id, null, { email: req.user.email, role: req.user.role }, req.user.email);
   res.json({ success: true, message: 'Logged out successfully' });
 });
 

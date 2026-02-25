@@ -47,4 +47,13 @@ const adminOrHR = (req, res, next) => {
   }
 };
 
-module.exports = { protect, admin, adminOrHR };
+// Check if user is manager, admin, or HR
+const managerOrHR = (req, res, next) => {
+  if (req.user && (req.user.role === 'admin' || req.user.role === 'hr' || req.user.role === 'manager')) {
+    next();
+  } else {
+    res.status(403).json({ success: false, message: 'Manager, Admin, or HR access required' });
+  }
+};
+
+module.exports = { protect, admin, adminOrHR, managerOrHR };

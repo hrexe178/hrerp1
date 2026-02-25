@@ -40,8 +40,11 @@ const Login = () => {
     <div className="login-page">
       <div className="login-container">
         <div className="login-header">
-          <h1>HR ERP System</h1>
-          <p>Human Resource Management</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '1rem' }}>
+            <img src="https://ui-avatars.com/api/?name=Katalyx+Solution&background=6366f1&color=fff&size=128&bold=true" alt="KS Logo" style={{ borderRadius: '12px', width: '60px', height: '60px' }} />
+            <h1 style={{ margin: 0 }}>KatalyxSolution</h1>
+          </div>
+          <p>Human Resource Management Portal</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
@@ -53,7 +56,7 @@ const Login = () => {
               id="email"
               type="email"
               name="email"
-              placeholder="admin@hrerp.com"
+              placeholder="username"
               value={formData.email}
               onChange={handleChange}
               required

@@ -1,6 +1,7 @@
 // Document manager component
 import React, { useEffect, useState } from 'react';
 import api from '../utils/api';
+import { toast } from 'react-toastify';
 
 const DocumentManager = () => {
   const [documents, setDocuments] = useState([]);
@@ -55,7 +56,7 @@ const DocumentManager = () => {
       console.log('Sending document data:', dataToSend);
 
       await api.post('/api/documents', dataToSend);
-      alert('Document uploaded successfully');
+      toast.success('Document uploaded successfully');
       setFormData({
         name: '',
         type: 'Other',
@@ -74,7 +75,7 @@ const DocumentManager = () => {
       const errorMsg = error.response?.data?.errors
         ? error.response.data.errors.map((e) => e.msg).join(', ')
         : error.response?.data?.message || error.message;
-      alert('Error uploading document: ' + errorMsg);
+      toast.error('Error uploading document: ' + errorMsg);
     }
   };
 
@@ -177,12 +178,12 @@ const DocumentManager = () => {
         <tbody>
           {documents.map((doc) => (
             <tr key={doc._id}>
-              <td>{doc.name}</td>
-              <td>{doc.type}</td>
-              <td>{doc.employee ? `${doc.employee.firstName} ${doc.employee.lastName}` : '-'}</td>
-              <td>{doc.uploadedBy ? `${doc.uploadedBy.firstName} ${doc.uploadedBy.lastName}` : 'Unknown'}</td>
-              <td>{new Date(doc.uploadDate).toLocaleDateString()}</td>
-              <td>
+              <td data-label="Document Name">{doc.name}</td>
+              <td data-label="Type">{doc.type}</td>
+              <td data-label="Employee">{doc.employee ? `${doc.employee.firstName} ${doc.employee.lastName}` : '-'}</td>
+              <td data-label="Uploaded By">{doc.uploadedBy ? `${doc.uploadedBy.firstName} ${doc.uploadedBy.lastName}` : 'Unknown'}</td>
+              <td data-label="Upload Date">{new Date(doc.uploadDate).toLocaleDateString()}</td>
+              <td data-label="Actions">
                 <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer">
                   Download
                 </a>
