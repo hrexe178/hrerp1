@@ -11,7 +11,7 @@ import './styles/App.css';
 
 // Lazy load components
 const Login = lazy(() => import('./components/Login'));
-const Dashboard = lazy(() => import('./components/Dashboard'));
+const Dashboard = lazy(() => import('./components/Dashboard.jsx'));
 const EmployeeList = lazy(() => import('./components/EmployeeList'));
 const EmployeeForm = lazy(() => import('./components/EmployeeForm'));
 const EmployeeDetails = lazy(() => import('./components/EmployeeDetails'));
