@@ -183,7 +183,7 @@ router.put(
     if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
 
     try {
-      const expense = await Expense.findById(req.params.id).populate('employee', 'employeeId');
+      const expense = await Expense.findById(req.params.id).populate('employee', 'employeeId user');
       if (!expense) return res.status(404).json({ success: false, message: 'Expense not found' });
       const canManage = await canUserManageEmployee(req.user, expense.employee._id);
       if (!canManage) return res.status(403).json({ success: false, message: 'Not authorized to approve this expense' });
@@ -260,7 +260,7 @@ router.put(
     if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
 
     try {
-      const expense = await Expense.findById(req.params.id).populate('employee', 'employeeId');
+      const expense = await Expense.findById(req.params.id).populate('employee', 'employeeId user');
       if (!expense) return res.status(404).json({ success: false, message: 'Expense not found' });
       const canManage = await canUserManageEmployee(req.user, expense.employee._id);
       if (!canManage) return res.status(403).json({ success: false, message: 'Not authorized to reject this expense' });
@@ -303,7 +303,7 @@ router.put(
     if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
 
     try {
-      const expense = await Expense.findById(req.params.id).populate('employee', 'employeeId');
+      const expense = await Expense.findById(req.params.id).populate('employee', 'employeeId user');
       if (!expense) return res.status(404).json({ success: false, message: 'Expense not found' });
       const canManage = await canUserManageEmployee(req.user, expense.employee._id);
       if (!canManage) return res.status(403).json({ success: false, message: 'Not authorized to pay this expense' });

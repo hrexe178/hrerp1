@@ -13,8 +13,7 @@ const Layout = ({ children }) => {
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
             <div className="mobile-nav-header">
                 <div className="sidebar-logo">
-                    <img src="https://ui-avatars.com/api/?name=Katalyx+Solution&background=6366f1&color=fff&size=128&bold=true" alt="KS Logo" style={{ borderRadius: '4px', width: '24px', height: '24px' }} />
-                    <span>KatalyxSolution</span>
+                    <img src="/katalyx-logo.png" alt="Katalyx Solution" style={{ maxHeight: '30px', width: 'auto' }} />
                 </div>
                 <button className={`hamburger ${isSidebarOpen ? 'active' : ''}`} onClick={toggleSidebar}>
                     <span className="bar"></span>

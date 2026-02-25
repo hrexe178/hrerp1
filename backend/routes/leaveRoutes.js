@@ -383,6 +383,19 @@ router.put(
           date: { $gte: new Date(leave.fromDate), $lte: new Date(leave.toDate) },
           status: 'Leave',
         });
+
+        // Restore leave balance
+        const leaveBalanceMap = {
+          Sick: 'sick',
+          Casual: 'casual',
+          Paid: 'paid',
+          Unpaid: 'unpaid',
+        };
+        const balanceKey = leaveBalanceMap[leave.leaveType];
+        if (balanceKey && employee.leaveBalance?.[balanceKey] !== undefined && leave.leaveType !== 'Unpaid') {
+          employee.leaveBalance[balanceKey] += leave.totalDays;
+          await employee.save();
+        }
       }
 
       await logAction(req, 'UPDATE', 'Leave', leave._id, previous, leave.toObject(), employee.employeeId);

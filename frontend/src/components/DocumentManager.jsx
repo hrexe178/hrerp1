@@ -83,115 +83,100 @@ const DocumentManager = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="document-manager">
+    <div className="dashboard-page animate-fade-in document-manager">
       <h1>Document Manager</h1>
-      <form onSubmit={handleSubmit} className="document-form">
-        <div className="form-group">
-          <label>Document Name *</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Document Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+      <form onSubmit={handleSubmit} className="glass-card form-group" style={{ marginBottom: '2rem' }}>
+        <h3>Upload New Document</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="form-group">
+            <label>Document Name *</label>
+            <input type="text" className="modern-input" name="name" placeholder="Document Name" value={formData.name} onChange={handleChange} required />
+          </div>
+          <div className="form-group">
+            <label>Type *</label>
+            <select name="type" className="modern-input" value={formData.type} onChange={handleChange}>
+              <option value="Project Document">Project Document</option>
+              <option value="Employee Document">Employee Document</option>
+              <option value="Contract">Contract</option>
+              <option value="Report">Report</option>
+              <option value="Invoice">Invoice</option>
+              <option value="Policy">Policy</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>Type *</label>
-          <select name="type" value={formData.type} onChange={handleChange}>
-            <option value="Project Document">Project Document</option>
-            <option value="Employee Document">Employee Document</option>
-            <option value="Contract">Contract</option>
-            <option value="Report">Report</option>
-            <option value="Invoice">Invoice</option>
-            <option value="Policy">Policy</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>File Type</label>
-          <select name="fileType" value={formData.fileType} onChange={handleChange}>
-            <option value="PDF">PDF</option>
-            <option value="DOC">DOC</option>
-            <option value="DOCX">DOCX</option>
-            <option value="XLS">XLS</option>
-            <option value="XLSX">XLSX</option>
-            <option value="PPT">PPT</option>
-            <option value="PPTX">PPTX</option>
-            <option value="Image">Image</option>
-            <option value="Video">Video</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>Employee (Optional)</label>
-          <select name="employee" value={formData.employee} onChange={handleChange}>
-            <option value="">Select Employee</option>
-            {employees.map(emp => (
-              <option key={emp._id} value={emp._id}>
-                {emp.firstName} {emp.lastName} ({emp.employeeId})
-              </option>
-            ))}
-          </select>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="form-group">
+            <label>File Type</label>
+            <select name="fileType" className="modern-input" value={formData.fileType} onChange={handleChange}>
+              <option value="PDF">PDF</option>
+              <option value="DOC">DOC</option>
+              <option value="DOCX">DOCX</option>
+              <option value="XLS">XLS</option>
+              <option value="XLSX">XLSX</option>
+              <option value="PPT">PPT</option>
+              <option value="PPTX">PPTX</option>
+              <option value="Image">Image</option>
+              <option value="Video">Video</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Employee (Optional)</label>
+            <select name="employee" className="modern-input" value={formData.employee} onChange={handleChange}>
+              <option value="">Select Employee</option>
+              {employees.map(emp => (
+                <option key={emp._id} value={emp._id}>
+                  {emp.firstName} {emp.lastName} ({emp.employeeId})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="form-group">
           <label>File URL *</label>
-          <input
-            type="text"
-            name="fileUrl"
-            placeholder="File URL"
-            value={formData.fileUrl}
-            onChange={handleChange}
-            required
-          />
+          <input type="url" className="modern-input" name="fileUrl" placeholder="https://example.com/file.pdf" value={formData.fileUrl} onChange={handleChange} required />
         </div>
 
         <div className="form-group">
           <label>Description</label>
-          <input
-            type="text"
-            name="description"
-            placeholder="Description"
-            value={formData.description}
-            onChange={handleChange}
-          />
+          <textarea name="description" className="modern-input" placeholder="Description" value={formData.description} onChange={handleChange} />
         </div>
 
-        <button type="submit" className="btn btn-primary">Upload Document</button>
+        <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: '1rem' }}>Upload Document</button>
       </form>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Document Name</th>
-            <th>Type</th>
-            <th>Employee</th>
-            <th>Uploaded By</th>
-            <th>Upload Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {documents.map((doc) => (
-            <tr key={doc._id}>
-              <td data-label="Document Name">{doc.name}</td>
-              <td data-label="Type">{doc.type}</td>
-              <td data-label="Employee">{doc.employee ? `${doc.employee.firstName} ${doc.employee.lastName}` : '-'}</td>
-              <td data-label="Uploaded By">{doc.uploadedBy ? `${doc.uploadedBy.firstName} ${doc.uploadedBy.lastName}` : 'Unknown'}</td>
-              <td data-label="Upload Date">{new Date(doc.uploadDate).toLocaleDateString()}</td>
-              <td data-label="Actions">
-                <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer">
-                  Download
-                </a>
-              </td>
+      <div className="table-responsive">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Document Name</th>
+              <th>Type</th>
+              <th>Employee</th>
+              <th>Uploaded By</th>
+              <th>Upload Date</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {documents.map((doc) => (
+              <tr key={doc._id}>
+                <td data-label="Document Name">{doc.name}</td>
+                <td data-label="Type">{doc.type}</td>
+                <td data-label="Employee">{doc.employee ? `${doc.employee.firstName} ${doc.employee.lastName}` : '-'}</td>
+                <td data-label="Uploaded By">{doc.uploadedBy ? `${doc.uploadedBy.firstName} ${doc.uploadedBy.lastName}` : 'Unknown'}</td>
+                <td data-label="Upload Date">{new Date(doc.uploadDate).toLocaleDateString()}</td>
+                <td data-label="Actions">
+                  <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="action-link">
+                    Download
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

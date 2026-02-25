@@ -69,63 +69,71 @@ const AnnouncementManagement = () => {
   };
 
   if (!hasAccess) {
-    return <div className="reports"><h2>Announcements</h2><p>Only HR/Admin can manage announcements.</p></div>;
+    return <div className="dashboard-page reports animate-fade-in"><h2>Announcements</h2><p>Only HR/Admin can manage announcements.</p></div>;
   }
 
   return (
-    <div className="reports">
+    <div className="dashboard-page animate-fade-in reports">
       <h2>Announcement Management</h2>
       {error && <div className="error">{error}</div>}
 
-      <form onSubmit={createAnnouncement}>
+      <form onSubmit={createAnnouncement} className="glass-card form-group" style={{ marginBottom: '2rem' }}>
         <h3>Create Announcement</h3>
-        <input type="text" placeholder="Title" value={formData.title} onChange={(e) => setFormData((p) => ({ ...p, title: e.target.value }))} required />
-        <textarea placeholder="Message" value={formData.message} onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))} required />
-        <select value={formData.targetAudience} onChange={(e) => setFormData((p) => ({ ...p, targetAudience: e.target.value }))}>
+        <input type="text" className="modern-input" placeholder="Title" value={formData.title} onChange={(e) => setFormData((p) => ({ ...p, title: e.target.value }))} required />
+        <textarea placeholder="Message" className="modern-input" value={formData.message} onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))} required />
+        <select value={formData.targetAudience} className="modern-input" onChange={(e) => setFormData((p) => ({ ...p, targetAudience: e.target.value }))}>
           <option value="All">All</option>
           <option value="Department">Department</option>
           <option value="Specific">Specific</option>
         </select>
         {formData.targetAudience === 'Department' && (
-          <input type="text" placeholder="Target Department" value={formData.targetDept} onChange={(e) => setFormData((p) => ({ ...p, targetDept: e.target.value }))} />
+          <input type="text" className="modern-input" placeholder="Target Department" value={formData.targetDept} onChange={(e) => setFormData((p) => ({ ...p, targetDept: e.target.value }))} />
         )}
-        <label>Publish Date</label>
-        <input type="datetime-local" value={formData.publishDate} onChange={(e) => setFormData((p) => ({ ...p, publishDate: e.target.value }))} />
-        <label>Expiry Date</label>
-        <input type="datetime-local" value={formData.expiryDate} onChange={(e) => setFormData((p) => ({ ...p, expiryDate: e.target.value }))} />
-        <button type="submit">Publish</button>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div>
+            <label>Publish Date</label>
+            <input type="datetime-local" className="modern-input" value={formData.publishDate} onChange={(e) => setFormData((p) => ({ ...p, publishDate: e.target.value }))} />
+          </div>
+          <div>
+            <label>Expiry Date</label>
+            <input type="datetime-local" className="modern-input" value={formData.expiryDate} onChange={(e) => setFormData((p) => ({ ...p, expiryDate: e.target.value }))} />
+          </div>
+        </div>
+        <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: '1rem' }}>Publish Announcement</button>
       </form>
 
       <h3>All Announcements</h3>
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Audience</th>
-              <th>Published</th>
-              <th>Active</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {announcements.map((row) => (
-              <tr key={row._id}>
-                <td data-label="Title">{row.title}</td>
-                <td data-label="Audience">{row.targetAudience}{row.targetDept ? ` (${row.targetDept})` : ''}</td>
-                <td data-label="Published">{formatDate(row.publishDate)}</td>
-                <td data-label="Active">{row.isActive ? 'Yes' : 'No'}</td>
-                <td data-label="Action">
-                  {row.isActive && (
-                    <button className="btn" onClick={() => deactivateAnnouncement(row._id)}>Deactivate</button>
-                  )}
-                </td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Audience</th>
+                <th>Published</th>
+                <th>Active</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {announcements.map((row) => (
+                <tr key={row._id}>
+                  <td data-label="Title">{row.title}</td>
+                  <td data-label="Audience">{row.targetAudience}{row.targetDept ? ` (${row.targetDept})` : ''}</td>
+                  <td data-label="Published">{formatDate(row.publishDate)}</td>
+                  <td data-label="Active">{row.isActive ? 'Yes' : 'No'}</td>
+                  <td data-label="Action">
+                    {row.isActive && (
+                      <button className="action-btn delete-btn" onClick={() => deactivateAnnouncement(row._id)}>Deactivate</button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

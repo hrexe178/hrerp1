@@ -135,9 +135,9 @@ const ProjectForm = () => {
   };
 
   return (
-    <div className="project-form">
+    <div className="dashboard-page animate-fade-in project-form">
       <h1>{id ? 'Edit Project' : 'Create Project'}</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="glass-card form-group" style={{ marginBottom: '2rem' }}>
         <div className="form-group">
           <label>Project Name *</label>
           <input

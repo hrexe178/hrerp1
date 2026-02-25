@@ -145,7 +145,7 @@ const EmployeeForm = () => {
   };
 
   return (
-    <div className="employee-form">
+    <div className="dashboard-page animate-fade-in employee-form">
       {credentials && (
         <div className="credentials-modal">
           <div className="credentials-content">
@@ -163,246 +163,210 @@ const EmployeeForm = () => {
         </div>
       )}
       <h1>{id ? 'Edit Employee' : 'Add Employee'}</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="firstName"
-          placeholder="First Name"
-          value={formData.firstName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Last Name"
-          value={formData.lastName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone"
-          value={formData.phone}
-          onChange={handleChange}
-        />
-        <input
-          type="date"
-          name="dateOfBirth"
-          placeholder="Date of Birth"
-          value={formData.dateOfBirth}
-          onChange={handleChange}
-        />
-        <select
-          name="gender"
-          value={formData.gender}
-          onChange={handleChange}
-        >
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-        <select
-          name="position"
-          value={formData.position}
-          onChange={handleChange}
-        >
-          <option value="">Select Position</option>
-          <option value="HR Executive">HR Executive</option>
-          <option value="Manager">Manager</option>
-          <option value="HR">HR</option>
-          <option value="Employee">Employee</option>
-          <option value="Other">Other</option>
-        </select>
-        <input
-          type="text"
-          name="designation"
-          placeholder="Designation"
-          value={formData.designation}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="department"
-          placeholder="Department"
-          value={formData.department}
-          onChange={handleChange}
-        />
-        <select
-          name="employmentType"
-          value={formData.employmentType}
-          onChange={handleChange}
-        >
-          <option value="Full-Time">Full-Time</option>
-          <option value="Part-Time">Part-Time</option>
-          <option value="Contract">Contract</option>
-          <option value="Intern">Intern</option>
-        </select>
-        <input
-          type="date"
-          name="joiningDate"
-          value={formData.joiningDate}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="workLocation"
-          placeholder="Work Location"
-          value={formData.workLocation}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="salary"
-          placeholder="Salary"
-          value={formData.salary}
-          onChange={handleChange}
-        />
-        <select
-          name="currency"
-          value={formData.currency}
-          onChange={handleChange}
-        >
-          <option value="INR">INR</option>
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-        </select>
-        <select
-          name="paymentFrequency"
-          value={formData.paymentFrequency}
-          onChange={handleChange}
-        >
-          <option value="Monthly">Monthly</option>
-          <option value="Weekly">Weekly</option>
-          <option value="Bi-weekly">Bi-weekly</option>
-          <option value="Daily">Daily</option>
-        </select>
+      <form onSubmit={handleSubmit} className="form-group" style={{ marginBottom: '2rem' }}>
+        <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+          <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary-color)', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Personal Details</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>First Name *</label>
+              <input type="text" className="modern-input" name="firstName" value={formData.firstName} onChange={handleChange} required />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Last Name *</label>
+              <input type="text" className="modern-input" name="lastName" value={formData.lastName} onChange={handleChange} required />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Email *</label>
+              <input type="email" className="modern-input" name="email" value={formData.email} onChange={handleChange} required />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Phone</label>
+              <input type="text" className="modern-input" name="phone" value={formData.phone} onChange={handleChange} />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Date of Birth</label>
+              <input type="date" className="modern-input" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Gender</label>
+              <select className="modern-input" name="gender" value={formData.gender} onChange={handleChange}>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-        <h3>Address</h3>
-        <input
-          type="text"
-          name="street"
-          placeholder="Street"
-          value={formData.street}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="city"
-          placeholder="City"
-          value={formData.city}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="state"
-          placeholder="State"
-          value={formData.state}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="country"
-          placeholder="Country"
-          value={formData.country}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="pin"
-          placeholder="Pin Code"
-          value={formData.pin}
-          onChange={handleChange}
-        />
+        <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+          <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary-color)', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Employment Details</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Role / Position</label>
+              <select className="modern-input" name="position" value={formData.position} onChange={handleChange}>
+                <option value="">Select Position</option>
+                <option value="HR Executive">HR Executive</option>
+                <option value="Manager">Manager</option>
+                <option value="HR">HR</option>
+                <option value="Employee">Employee</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Designation</label>
+              <input type="text" className="modern-input" name="designation" placeholder="e.g. Senior Developer" value={formData.designation} onChange={handleChange} />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Department</label>
+              <input type="text" className="modern-input" name="department" placeholder="e.g. Engineering" value={formData.department} onChange={handleChange} />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Employment Type</label>
+              <select className="modern-input" name="employmentType" value={formData.employmentType} onChange={handleChange}>
+                <option value="Full-Time">Full-Time</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Contract">Contract</option>
+                <option value="Intern">Intern</option>
+              </select>
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Joining Date *</label>
+              <input type="date" className="modern-input" name="joiningDate" value={formData.joiningDate} onChange={handleChange} required />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Work Location</label>
+              <input type="text" className="modern-input" name="workLocation" placeholder="e.g. New York Office" value={formData.workLocation} onChange={handleChange} />
+            </div>
+          </div>
+        </div>
 
-        <h3>Emergency Contact</h3>
-        <input
-          type="text"
-          name="emergencyContactName"
-          placeholder="Emergency Contact Name"
-          value={formData.emergencyContactName}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="emergencyContactPhone"
-          placeholder="Emergency Contact Phone"
-          value={formData.emergencyContactPhone}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="emergencyContactRelationship"
-          placeholder="Relationship"
-          value={formData.emergencyContactRelationship}
-          onChange={handleChange}
-        />
+        <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+          <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary-color)', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Financial Information</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Base Salary</label>
+              <input type="number" className="modern-input" name="salary" placeholder="Amount" value={formData.salary} onChange={handleChange} />
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Currency</label>
+              <select className="modern-input" name="currency" value={formData.currency} onChange={handleChange}>
+                <option value="INR">INR</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Payment Frequency</label>
+              <select className="modern-input" name="paymentFrequency" value={formData.paymentFrequency} onChange={handleChange}>
+                <option value="Monthly">Monthly</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Bi-weekly">Bi-weekly</option>
+                <option value="Daily">Daily</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-        <h3>Status</h3>
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-        >
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-          <option value="On-Leave">On Leave</option>
-          <option value="Terminated">Terminated</option>
-        </select>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', marginBottom: '2rem' }}>
+          <div className="glass-card" style={{ padding: '2rem', flex: '1 1 300px' }}>
+            <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary-color)', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Residential Address</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem'}}>Street Address</label>
+                <input type="text" className="modern-input" name="street" value={formData.street} onChange={handleChange} />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem'}}>City</label>
+                  <input type="text" className="modern-input" name="city" value={formData.city} onChange={handleChange} />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem'}}>State / Province</label>
+                  <input type="text" className="modern-input" name="state" value={formData.state} onChange={handleChange} />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem'}}>Country</label>
+                  <input type="text" className="modern-input" name="country" value={formData.country} onChange={handleChange} />
+                </div>
+                <div>
+                  <label style={{display: 'block', marginBottom: '0.5rem'}}>Pin / Zip Code</label>
+                  <input type="text" className="modern-input" name="pin" value={formData.pin} onChange={handleChange} />
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <h3>Lifecycle Management</h3>
-        <select
-          name="onboardingStatus"
-          value={formData.onboardingStatus}
-          onChange={handleChange}
-        >
-          <option value="Pending">Onboarding: Pending</option>
-          <option value="In-Progress">Onboarding: In-Progress</option>
-          <option value="Completed">Onboarding: Completed</option>
-        </select>
+          <div className="glass-card" style={{ padding: '2rem', flex: '1 1 300px' }}>
+            <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary-color)', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Emergency Contact</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem'}}>Contact Name</label>
+                <input type="text" className="modern-input" name="emergencyContactName" value={formData.emergencyContactName} onChange={handleChange} />
+              </div>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem'}}>Contact Phone</label>
+                <input type="text" className="modern-input" name="emergencyContactPhone" value={formData.emergencyContactPhone} onChange={handleChange} />
+              </div>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem'}}>Relationship</label>
+                <input type="text" className="modern-input" name="emergencyContactRelationship" placeholder="e.g. Spouse, Parent" value={formData.emergencyContactRelationship} onChange={handleChange} />
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <select
-          name="offboardingStatus"
-          value={formData.offboardingStatus}
-          onChange={handleChange}
-        >
-          <option value="Not Started">Offboarding: Not Started</option>
-          <option value="Initiated">Offboarding: Initiated</option>
-          <option value="In-Progress">Offboarding: In-Progress</option>
-          <option value="Completed">Offboarding: Completed</option>
-        </select>
+        <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+          <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary-color)', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Lifecycle & Status</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Current Status</label>
+              <select className="modern-input" name="status" value={formData.status} onChange={handleChange}>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="On-Leave">On Leave</option>
+                <option value="Terminated">Terminated</option>
+              </select>
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Onboarding Tracker</label>
+              <select className="modern-input" name="onboardingStatus" value={formData.onboardingStatus} onChange={handleChange}>
+                <option value="Pending">Pending</option>
+                <option value="In-Progress">In-Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div>
+              <label style={{display: 'block', marginBottom: '0.5rem'}}>Offboarding Tracker</label>
+              <select className="modern-input" name="offboardingStatus" value={formData.offboardingStatus} onChange={handleChange}>
+                <option value="Not Started">Not Started</option>
+                <option value="Initiated">Initiated</option>
+                <option value="In-Progress">In-Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+          </div>
 
-        {formData.offboardingStatus !== 'Not Started' && (
-          <>
-            <input
-              type="date"
-              name="exitDate"
-              placeholder="Exit Date"
-              value={formData.exitDate}
-              onChange={handleChange}
-            />
-            <textarea
-              name="exitReason"
-              placeholder="Exit Reason / Notes"
-              value={formData.exitReason}
-              onChange={handleChange}
-              rows="3"
-            />
-          </>
-        )}
+          {formData.offboardingStatus !== 'Not Started' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem', marginTop: '1.5rem' }}>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem'}}>Exit Date</label>
+                <input type="date" className="modern-input" name="exitDate" value={formData.exitDate} onChange={handleChange} />
+              </div>
+              <div>
+                <label style={{display: 'block', marginBottom: '0.5rem'}}>Exit Reason / Notes</label>
+                <textarea className="modern-input" name="exitReason" value={formData.exitReason} onChange={handleChange} rows="2" />
+              </div>
+            </div>
+          )}
+        </div>
 
-        <button type="submit">Submit</button>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button type="submit" className="btn-primary" style={{ padding: '0.75rem 2rem' }}>{id ? 'Update Employee' : 'Submit & Save'}</button>
+          <button type="button" className="action-btn" onClick={() => navigate('/employees')} style={{ padding: '0.75rem 2rem' }}>Cancel</button>
+        </div>
       </form>
     </div>
   );

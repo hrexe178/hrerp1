@@ -20,6 +20,9 @@ const protect = async (req, res, next) => {
       if (!req.user) {
         return res.status(404).json({ success: false, message: 'User not found' });
       }
+      if (!req.user.isActive) {
+        return res.status(403).json({ success: false, message: 'Your account has been deactivated.' });
+      }
       next();
     } catch (error) {
       return res.status(401).json({ success: false, message: 'Not authorized to access this route' });

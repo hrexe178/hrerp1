@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const PDFDocument = require('pdfkit');
 
 const ensureDir = (dirPath) => {
@@ -23,7 +24,7 @@ const writeSection = (doc, title, lines) => {
 };
 
 const generatePayslipPdf = async ({ payroll, employee }) => {
-  const outputDir = path.join(__dirname, '..', 'generated-payslips');
+  const outputDir = path.join(os.tmpdir(), 'generated-payslips');
   ensureDir(outputDir);
 
   const filename = `payslip-${employee.employeeId}-${payroll.year}-${payroll.month}.pdf`;

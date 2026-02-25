@@ -2,7 +2,7 @@
 // This file centralizes all API-related configuration
 
 // Get API URL from environment variable or use default
-export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+export const API_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
 
 // API endpoints
 export const API_ENDPOINTS = {

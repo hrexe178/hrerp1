@@ -85,7 +85,7 @@ const EmployeeList = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="employee-list">
+    <div className="dashboard-page animate-fade-in employee-list">
       <h1>Employees</h1>
 
       <div className="filters-container glass-card" style={{ marginBottom: '20px', padding: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -110,38 +110,40 @@ const EmployeeList = () => {
         </Link>
       </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Employee ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Department</th>
-            <th>Designation</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredEmployees.length > 0 ? filteredEmployees.map((employee) => (
-            <tr key={employee._id}>
-              <td data-label="Employee ID">{employee.employeeId}</td>
-              <td data-label="Name">{employee.firstName} {employee.lastName}</td>
-              <td data-label="Email">{employee.email}</td>
-              <td data-label="Department">{employee.department}</td>
-              <td data-label="Designation">{employee.designation}</td>
-              <td data-label="Status">{employee.employmentStatus || employee.status}</td>
-              <td data-label="Actions">
-                <Link to={`/employees/${employee._id}`} className="action-link">View</Link>
-                <Link to={`/employees/${employee._id}/edit`} className="action-link">Edit</Link>
-                <button onClick={() => handleDelete(employee._id)} className="action-btn delete-btn">Delete</button>
-              </td>
+      <div className="table-responsive">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          )) : (
-            <tr><td colSpan="7" style={{ textAlign: 'center' }}>No employees found</td></tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredEmployees.length > 0 ? filteredEmployees.map((employee) => (
+              <tr key={employee._id}>
+                <td data-label="Employee ID">{employee.employeeId}</td>
+                <td data-label="Name">{employee.firstName} {employee.lastName}</td>
+                <td data-label="Email">{employee.email}</td>
+                <td data-label="Department">{employee.department}</td>
+                <td data-label="Designation">{employee.designation}</td>
+                <td data-label="Status">{employee.employmentStatus || employee.status}</td>
+                <td data-label="Actions">
+                  <Link to={`/employees/${employee._id}`} className="action-link">View</Link>
+                  <Link to={`/employees/${employee._id}/edit`} className="action-link">Edit</Link>
+                  <button onClick={() => handleDelete(employee._id)} className="action-btn delete-btn">Delete</button>
+                </td>
+              </tr>
+            )) : (
+              <tr><td colSpan="7" style={{ textAlign: 'center' }}>No employees found</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

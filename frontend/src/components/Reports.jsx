@@ -50,7 +50,7 @@ const Reports = () => {
   if (loading) return <div className="loading">Generating system reports...</div>;
 
   return (
-    <div className="reports animate-fade-in">
+    <div className="dashboard-page animate-fade-in reports">
       <div className="page-header">
         <h1>Reports & System Analytics</h1>
         <button className="btn btn-secondary" onClick={fetchData}>Refresh Data</button>
@@ -127,7 +127,7 @@ const Reports = () => {
 
       <section className="glass-card" style={{ marginTop: '2rem' }}>
         <h3>Operational Insights</h3>
-        <div className="table-container">
+        <div className="table-responsive">
           <table className="table">
             <thead>
               <tr>

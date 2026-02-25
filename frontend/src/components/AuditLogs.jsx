@@ -84,16 +84,17 @@ const AuditLogs = () => {
             <div className="filters-container glass-card" style={{ marginBottom: '20px', padding: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 <input
                     type="text"
+                    className="modern-input"
                     placeholder="Search Target or User..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{ flex: '1 1 200px' }}
                 />
-                <select value={moduleFilter} onChange={(e) => setModuleFilter(e.target.value)}>
+                <select className="modern-input" value={moduleFilter} onChange={(e) => setModuleFilter(e.target.value)}>
                     <option value="">All Modules</option>
                     {modules.map(mod => <option key={mod} value={mod}>{mod}</option>)}
                 </select>
-                <select value={actionFilter} onChange={(e) => setActionFilter(e.target.value)}>
+                <select className="modern-input" value={actionFilter} onChange={(e) => setActionFilter(e.target.value)}>
                     <option value="">All Actions</option>
                     {actions.map(act => <option key={act} value={act}>{act}</option>)}
                 </select>
@@ -101,39 +102,41 @@ const AuditLogs = () => {
             </div>
 
             <div className="glass-card full-width">
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Date / Time</th>
-                            <th>Action</th>
-                            <th>Module</th>
-                            <th>Target Record</th>
-                            <th>Performed By</th>
-                            <th>IP Address</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredLogs.length > 0 ? filteredLogs.map(log => (
-                            <tr key={log._id}>
-                                <td data-label="Date / Time">{new Date(log.createdAt).toLocaleString()}</td>
-                                <td data-label="Action">
-                                    <span style={{
-                                        color: log.action === 'CREATE' ? '#34d399' : log.action === 'DELETE' ? '#f87171' : '#60a5fa',
-                                        fontWeight: 'bold'
-                                    }}>
-                                        {log.action}
-                                    </span>
-                                </td>
-                                <td data-label="Module">{log.module}</td>
-                                <td data-label="Target Record">{log.targetName || log.targetId || '-'}</td>
-                                <td data-label="Performed By">{log.performedBy ? `${log.performedBy.firstName} ${log.performedBy.lastName}` : 'System / Self Registration'}</td>
-                                <td data-label="IP Address">{log.ipAddress || '-'}</td>
+                <div className="table-responsive">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Date / Time</th>
+                                <th>Action</th>
+                                <th>Module</th>
+                                <th>Target Record</th>
+                                <th>Performed By</th>
+                                <th>IP Address</th>
                             </tr>
-                        )) : (
-                            <tr><td colSpan="6" style={{ textAlign: 'center' }}>No audit logs recorded matching criteria.</td></tr>
-                        )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {filteredLogs.length > 0 ? filteredLogs.map(log => (
+                                <tr key={log._id}>
+                                    <td data-label="Date / Time">{new Date(log.createdAt).toLocaleString()}</td>
+                                    <td data-label="Action">
+                                        <span style={{
+                                            color: log.action === 'CREATE' ? '#34d399' : log.action === 'DELETE' ? '#f87171' : '#60a5fa',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            {log.action}
+                                        </span>
+                                    </td>
+                                    <td data-label="Module">{log.module}</td>
+                                    <td data-label="Target Record">{log.targetName || log.targetId || '-'}</td>
+                                    <td data-label="Performed By">{log.performedBy ? `${log.performedBy.firstName} ${log.performedBy.lastName}` : 'System / Self Registration'}</td>
+                                    <td data-label="IP Address">{log.ipAddress || '-'}</td>
+                                </tr>
+                            )) : (
+                                <tr><td colSpan="6" style={{ textAlign: 'center' }}>No audit logs recorded matching criteria.</td></tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

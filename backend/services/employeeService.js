@@ -48,7 +48,8 @@ const createEmployee = async (employeeData, req) => {
         credentials.role,
     ]);
 
-    return { employee, credentials };
+    const publicCredentials = { email: credentials.email, role: credentials.role, position: credentials.position };
+    return { employee, credentials: publicCredentials };
 };
 
 const getAllEmployees = async (query = {}, options = {}) => {

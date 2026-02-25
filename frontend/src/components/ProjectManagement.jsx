@@ -81,7 +81,7 @@ const ProjectManagement = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="project-management">
+    <div className="dashboard-page animate-fade-in project-management">
       <h1>Projects</h1>
 
       <div className="filters-container glass-card" style={{ marginBottom: '20px', padding: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -102,38 +102,40 @@ const ProjectManagement = () => {
         </Link>
       </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Project Name</th>
-            <th>Status</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Progress</th>
-            <th>Manager</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProjects.length > 0 ? filteredProjects.map((project) => (
-            <tr key={project._id}>
-              <td data-label="Project Name">{project.name || project.projectName}</td>
-              <td data-label="Status">{project.status}</td>
-              <td data-label="Start Date">{new Date(project.startDate).toLocaleDateString()}</td>
-              <td data-label="End Date">{project.endDate ? new Date(project.endDate).toLocaleDateString() : 'N/A'}</td>
-              <td data-label="Progress">{project.progressPercentage}%</td>
-              <td data-label="Manager">{project.manager?.firstName} {project.manager?.lastName}</td>
-              <td data-label="Actions">
-                <Link to={`/projects/${project._id}`} className="action-link">View</Link>
-                <Link to={`/projects/${project._id}/edit`} className="action-link">Edit</Link>
-                <button onClick={() => handleDelete(project._id)} className="action-btn delete-btn">Delete</button>
-              </td>
+      <div className="table-responsive">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Project Name</th>
+              <th>Status</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Progress</th>
+              <th>Manager</th>
+              <th>Actions</th>
             </tr>
-          )) : (
-            <tr><td colSpan="7" style={{ textAlign: 'center' }}>No projects found</td></tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredProjects.length > 0 ? filteredProjects.map((project) => (
+              <tr key={project._id}>
+                <td data-label="Project Name">{project.name || project.projectName}</td>
+                <td data-label="Status">{project.status}</td>
+                <td data-label="Start Date">{new Date(project.startDate).toLocaleDateString()}</td>
+                <td data-label="End Date">{project.endDate ? new Date(project.endDate).toLocaleDateString() : 'N/A'}</td>
+                <td data-label="Progress">{project.progressPercentage}%</td>
+                <td data-label="Manager">{project.manager?.firstName} {project.manager?.lastName}</td>
+                <td data-label="Actions">
+                  <Link to={`/projects/${project._id}`} className="action-link">View</Link>
+                  <Link to={`/projects/${project._id}/edit`} className="action-link">Edit</Link>
+                  <button onClick={() => handleDelete(project._id)} className="action-btn delete-btn">Delete</button>
+                </td>
+              </tr>
+            )) : (
+              <tr><td colSpan="7" style={{ textAlign: 'center' }}>No projects found</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

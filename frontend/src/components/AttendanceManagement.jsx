@@ -88,7 +88,7 @@ const AttendanceManagement = () => {
   };
 
   return (
-    <div className="attendance-management animate-fade-in">
+    <div className="dashboard-page animate-fade-in attendance-management">
       <div className="page-header">
         <h2>Attendance Tracking</h2>
         <div style={{ display: 'flex', gap: '1rem' }}>
@@ -108,7 +108,7 @@ const AttendanceManagement = () => {
           <form onSubmit={handleSubmit} className="form-container">
             <div className="form-group">
               <label>Employee</label>
-              <select value={selectedEmployee} onChange={(e) => setSelectedEmployee(e.target.value)}>
+              <select className="modern-input" value={selectedEmployee} onChange={(e) => setSelectedEmployee(e.target.value)}>
                 <option value="">Choose Employee...</option>
                 {employees.map(emp => (
                   <option key={emp._id} value={emp._id}>{emp.firstName} {emp.lastName} ({emp.employeeId})</option>
@@ -117,7 +117,7 @@ const AttendanceManagement = () => {
             </div>
             <div className="form-group">
               <label>Status</label>
-              <select value={status} onChange={(e) => setStatus(e.target.value)}>
+              <select className="modern-input" value={status} onChange={(e) => setStatus(e.target.value)}>
                 <option value="Present">Present</option>
                 <option value="Absent">Absent</option>
                 <option value="Half-Day">Half-Day</option>
@@ -128,21 +128,21 @@ const AttendanceManagement = () => {
               <div className="grid-2-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                 <div className="form-group">
                   <label>In</label>
-                  <input type="time" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+                  <input className="modern-input" type="time" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
                 </div>
                 <div className="form-group">
                   <label>Out</label>
-                  <input type="time" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+                  <input className="modern-input" type="time" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
                 </div>
               </div>
             )}
-            <button type="submit" className="btn-primary full-width-btn">Save Record</button>
+            <button type="submit" className="btn-primary full-width-btn" style={{ marginTop: '1rem' }}>Save Record</button>
           </form>
         </section>
 
         <section className="glass-card">
           <h3>Attendance List - {formatDate(filterDate)}</h3>
-          <div className="table-container">
+          <div className="table-responsive">
             <table className="table">
               <thead>
                 <tr>

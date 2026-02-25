@@ -408,13 +408,31 @@ button[type="submit"]:hover {
   margin-bottom: var(--space-8);
 }
 
+.ks-logo-small {
+  width: 40px;
+  height: 40px;
+  background: var(--accent-gradient);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
 .sidebar-logo {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.sidebar-logo span {
   background: var(--accent-gradient);
   -webkit-background-clip: text;
   background-clip: text;
@@ -442,6 +460,7 @@ button[type="submit"]:hover {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .sidebar-link:hover {
@@ -450,9 +469,13 @@ button[type="submit"]:hover {
 }
 
 .sidebar-link.active {
-  color: var(--text-primary);
-  background: var(--accent-primary);
+  color: #fff;
+  background: var(--accent-gradient);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.sidebar-link .sidebar-icon {
+  flex-shrink: 0;
 }
 
 .sidebar-footer {
@@ -948,5 +971,136 @@ button[type="submit"]:hover {
     color: var(--text-muted);
     text-transform: uppercase;
     font-size: 0.75rem;
+  }
+
+  /* ==========================================================================
+   Global Table Styles (MNC Corporate Grade)
+   ========================================================================== */
+  .table-responsive {
+    overflow-x: auto;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--glass-shadow);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+  }
+
+  .table thead th {
+    background: rgba(15, 23, 42, 0.7);
+    padding: var(--space-4) var(--space-5);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--glass-border);
+  }
+
+  .table tbody tr {
+    border-bottom: 1px solid var(--glass-border);
+    transition: background-color 0.2s ease;
+  }
+
+  .table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.05);
+  }
+
+  .table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .table tbody td {
+    padding: var(--space-4) var(--space-5);
+    vertical-align: middle;
+  }
+
+  /* Action Links and Buttons in Tables */
+  .table .action-link,
+  .table .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    margin-right: var(--space-2);
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--accent-secondary);
+    border: 1px solid transparent;
+    text-decoration: none;
+  }
+
+  .table .action-link:hover,
+  .table .action-btn:hover {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #fff;
+  }
+
+  .table .delete-btn {
+    color: #FCA5A5;
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  .table .delete-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    .table thead {
+      display: none;
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+      display: block;
+      width: 100%;
+    }
+
+    .table tr {
+      margin-bottom: var(--space-4);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-2);
+    }
+
+    .table td {
+      text-align: right;
+      padding-left: 50%;
+      position: relative;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .table td:last-child {
+      border-bottom: 0;
+    }
+
+    .table td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: var(--space-4);
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
   }
 }

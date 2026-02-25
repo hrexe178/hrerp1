@@ -22,34 +22,40 @@ const MyPayslips = () => {
   }, []);
 
   return (
-    <div className="reports">
+    <div className="dashboard-page animate-fade-in reports">
       <h2>My Payslips</h2>
       {error && <div className="error">{error}</div>}
       {loading ? (
         <div>Loading payslips...</div>
       ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Month</th>
-              <th>Year</th>
-              <th>Status</th>
-              <th>Gross</th>
-              <th>Net</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row._id}>
-                <td data-label="Month">{row.month}</td>
-                <td data-label="Year">{row.year}</td>
-                <td data-label="Status">{row.status}</td>
-                <td data-label="Gross">{row.grossSalary || 0}</td>
-                <td data-label="Net">{row.netSalary || 0}</td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Status</th>
+                <th>Gross</th>
+                <th>Net</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row._id}>
+                  <td data-label="Month">{row.month}</td>
+                  <td data-label="Year">{row.year}</td>
+                  <td data-label="Status">
+                    <span className={`status-badge ${row.status.toLowerCase()}`}>
+                      {row.status}
+                    </span>
+                  </td>
+                  <td data-label="Gross">${row.grossSalary || 0}</td>
+                  <td data-label="Net">${row.netSalary || 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

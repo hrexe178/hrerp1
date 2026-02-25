@@ -37,7 +37,7 @@ const GlobalSettings = lazy(() => import('./components/GlobalSettings'));
 
 const LoadingFallback = () => (
   <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#0F172A', color: 'white' }}>
-    <div className="loading-spinner">Loading KatalyxSolution...</div>
+    <div className="loading-spinner">Loading...</div>
   </div>
 );
 

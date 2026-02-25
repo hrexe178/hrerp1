@@ -97,6 +97,11 @@ router.post(
         return res.status(401).json({ success: false, message: 'Invalid credentials' });
       }
 
+      // Check if user is active
+      if (!user.isActive) {
+        return res.status(403).json({ success: false, message: 'Your account has been deactivated. Please contact support.' });
+      }
+
       // Check if password matches
       const isMatch = await user.matchPassword(password);
       if (!isMatch) {

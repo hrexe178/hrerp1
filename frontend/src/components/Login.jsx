@@ -7,12 +7,16 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
   const location = useLocation();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -21,16 +25,20 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/api/auth/login', formData);
+      const { data } = await api.post('/api/auth/login', formData);
 
-      if (response.data.success) {
-        login(response.data.token, response.data.user);
+      if (data?.success && data?.token) {
+        login(data.token, data.user);
         const redirectTo = location.state?.from?.pathname || '/';
         navigate(redirectTo);
+      } else {
+        setError('Invalid login response from server.');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
-      console.error('Login error:', err);
+      setError(
+        err.response?.data?.message ||
+        'Login failed. Please verify your credentials.'
+      );
     } finally {
       setLoading(false);
     }
@@ -38,56 +46,88 @@ const Login = () => {
 
   return (
     <div className="login-page">
-      <div className="login-container">
-        <div className="login-header">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '1rem' }}>
-            <img src="https://ui-avatars.com/api/?name=Katalyx+Solution&background=6366f1&color=fff&size=128&bold=true" alt="KS Logo" style={{ borderRadius: '12px', width: '60px', height: '60px' }} />
-            <h1 style={{ margin: 0 }}>KatalyxSolution</h1>
+      <div className="login-split-container">
+
+        {/* Branding Panel */}
+        <div className="login-branding-panel">
+          <div className="branding-content">
+            <img
+              src="/katalyx-logo.png"
+              alt="Katalyx Solution"
+              style={{ maxWidth: '80%', maxHeight: '100px', marginBottom: '20px' }}
+            />
+            <p className="branding-subtitle">
+              Enterprise Human Resource Management
+            </p>
+            <div className="branding-divider"></div>
+            <p className="branding-quote">
+              "Empowering our workforce through intelligent, data-driven HR solutions."
+            </p>
           </div>
-          <p>Human Resource Management Portal</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="login-form">
-          {error && <div className="error-message">{error}</div>}
-
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              placeholder="username"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
+        {/* Login Form Panel */}
+        <div className="login-form-panel">
+          <div className="login-header text-left">
+            <h1>Welcome Back</h1>
+            <p className="text-muted">
+              Sign in to your corporate portal
+            </p>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              required
+          <form onSubmit={handleSubmit} className="login-form">
+            {error && (
+              <div className="error-alert login-error">
+                {error}
+              </div>
+            )}
+
+            <div className="form-group mb-4">
+              <label htmlFor="email">Work Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="name@katalyxsolution.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                disabled={loading}
+                className="modern-input"
+                autoComplete="email"
+              />
+            </div>
+
+            <div className="form-group mb-4">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                disabled={loading}
+                className="modern-input"
+                autoComplete="current-password"
+              />
+            </div>
+
+
+            <button
+              type="submit"
               disabled={loading}
-            />
-          </div>
+              className="btn-primary full-width-btn login-submit-btn"
+            >
+              {loading ? 'Authenticating...' : 'Sign In'}
+            </button>
+          </form>
 
-          <button type="submit" disabled={loading} className="login-button">
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-
-
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
-

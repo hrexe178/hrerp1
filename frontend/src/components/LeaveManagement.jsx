@@ -54,75 +54,79 @@ const LeaveManagement = () => {
     });
 
     return (
-        <div className="reports">
+        <div className="dashboard-page animate-fade-in reports">
             <h2>Leave Approval Queue</h2>
             {error && <div className="error">{error}</div>}
 
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Employee</th>
-                        <th>Type</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Days</th>
-                        <th>Reason</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredLeaves.length > 0 ? filteredLeaves.map((leave) => (
-                        <tr key={leave._id}>
-                            <td data-label="Employee">{leave.employee?.firstName} {leave.employee?.lastName} ({leave.employee?.employeeId})</td>
-                            <td data-label="Type">{leave.leaveType}</td>
-                            <td data-label="From">{formatDate(leave.fromDate)}</td>
-                            <td data-label="To">{formatDate(leave.toDate)}</td>
-                            <td data-label="Days">{leave.totalDays}</td>
-                            <td data-label="Reason">{leave.reason}</td>
-                            <td data-label="Status">
-                                <span className={`status-badge ${leave.status === 'Manager Approved' ? 'status-manager-approved' : leave.status.toLowerCase()}`}>
-                                    {leave.status}
-                                </span>
-                            </td>
-                            <td data-label="Actions">
-                                <button className="btn btn-primary" onClick={() => handleAction(leave._id, 'approve')}>Approve</button>
-                                <button className="btn delete-btn" onClick={() => handleAction(leave._id, 'reject')}>Reject</button>
-                            </td>
+            <div className="table-responsive">
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Type</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Days</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
-                    )) : (
-                        <tr><td colSpan="8" style={{ textAlign: 'center' }}>No leaves pending for your approval</td></tr>
-                    )}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {filteredLeaves.length > 0 ? filteredLeaves.map((leave) => (
+                            <tr key={leave._id}>
+                                <td data-label="Employee">{leave.employee?.firstName} {leave.employee?.lastName} ({leave.employee?.employeeId})</td>
+                                <td data-label="Type">{leave.leaveType}</td>
+                                <td data-label="From">{formatDate(leave.fromDate)}</td>
+                                <td data-label="To">{formatDate(leave.toDate)}</td>
+                                <td data-label="Days">{leave.totalDays}</td>
+                                <td data-label="Reason">{leave.reason}</td>
+                                <td data-label="Status">
+                                    <span className={`status-badge ${leave.status === 'Manager Approved' ? 'status-manager-approved' : leave.status.toLowerCase()}`}>
+                                        {leave.status}
+                                    </span>
+                                </td>
+                                <td data-label="Actions">
+                                    <button className="action-btn" onClick={() => handleAction(leave._id, 'approve')}>Approve</button>
+                                    <button className="action-btn delete-btn" onClick={() => handleAction(leave._id, 'reject')}>Reject</button>
+                                </td>
+                            </tr>
+                        )) : (
+                            <tr><td colSpan="8" style={{ textAlign: 'center' }}>No leaves pending for your approval</td></tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
             <h3 style={{ marginTop: '40px' }}>Recent Leave History</h3>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Employee</th>
-                        <th>Type</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {leaves.filter(l => ['Approved', 'Rejected', 'Cancelled'].includes(l.status)).slice(0, 10).map((leave) => (
-                        <tr key={leave._id}>
-                            <td data-label="Employee">{leave.employee?.firstName} {leave.employee?.lastName}</td>
-                            <td data-label="Type">{leave.leaveType}</td>
-                            <td data-label="From">{formatDate(leave.fromDate)}</td>
-                            <td data-label="To">{formatDate(leave.toDate)}</td>
-                            <td data-label="Status">
-                                <span className={`status-badge ${leave.status.toLowerCase()}`}>
-                                    {leave.status}
-                                </span>
-                            </td>
+            <div className="table-responsive">
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Type</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Status</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {leaves.filter(l => ['Approved', 'Rejected', 'Cancelled'].includes(l.status)).slice(0, 10).map((leave) => (
+                            <tr key={leave._id}>
+                                <td data-label="Employee">{leave.employee?.firstName} {leave.employee?.lastName}</td>
+                                <td data-label="Type">{leave.leaveType}</td>
+                                <td data-label="From">{formatDate(leave.fromDate)}</td>
+                                <td data-label="To">{formatDate(leave.toDate)}</td>
+                                <td data-label="Status">
+                                    <span className={`status-badge ${leave.status.toLowerCase()}`}>
+                                        {leave.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

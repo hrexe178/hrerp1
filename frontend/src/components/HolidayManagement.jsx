@@ -61,25 +61,25 @@ const HolidayManagement = () => {
   };
 
   if (!hasAccess) {
-    return <div className="reports"><h2>Holiday Calendar</h2><p>Only HR/Admin can manage holidays.</p></div>;
+    return <div className="dashboard-page reports"><h2 className="animate-fade-in">Holiday Calendar</h2><p>Only HR/Admin can manage holidays.</p></div>;
   }
 
   return (
-    <div className="reports">
+    <div className="dashboard-page animate-fade-in reports">
       <h2>Holiday Calendar Management</h2>
       {error && <div className="error">{error}</div>}
 
-      <form onSubmit={createHoliday}>
+      <form onSubmit={createHoliday} className="glass-card form-group" style={{ marginBottom: '2rem' }}>
         <h3>Add Holiday</h3>
-        <input type="text" placeholder="Holiday Name" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} required />
-        <input type="date" value={formData.date} onChange={(e) => setFormData((p) => ({ ...p, date: e.target.value }))} required />
-        <select value={formData.type} onChange={(e) => setFormData((p) => ({ ...p, type: e.target.value }))}>
+        <input type="text" className="modern-input" placeholder="Holiday Name" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} required />
+        <input type="date" className="modern-input" value={formData.date} onChange={(e) => setFormData((p) => ({ ...p, date: e.target.value }))} required />
+        <select value={formData.type} className="modern-input" onChange={(e) => setFormData((p) => ({ ...p, type: e.target.value }))}>
           <option value="National">National</option>
           <option value="Company">Company</option>
           <option value="Optional">Optional</option>
         </select>
-        <textarea placeholder="Description" value={formData.description} onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))} />
-        <button type="submit">Add Holiday</button>
+        <textarea placeholder="Description" className="modern-input" value={formData.description} onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))} />
+        <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: '1rem' }}>Add Holiday</button>
       </form>
 
       <h3>Holiday List</h3>
@@ -96,30 +96,32 @@ const HolidayManagement = () => {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {holidays.map((holiday) => (
-              <tr key={holiday._id}>
-                <td data-label="Date">{formatDate(holiday.date)}</td>
-                <td data-label="Name">{holiday.name}</td>
-                <td data-label="Type">{holiday.type}</td>
-                <td data-label="Description">{holiday.description || '-'}</td>
-                <td data-label="Action">
-                  <button className="btn" onClick={() => deleteHoliday(holiday._id)}>Delete</button>
-                </td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {holidays.map((holiday) => (
+                <tr key={holiday._id}>
+                  <td data-label="Date">{formatDate(holiday.date)}</td>
+                  <td data-label="Name">{holiday.name}</td>
+                  <td data-label="Type">{holiday.type}</td>
+                  <td data-label="Description">{holiday.description || '-'}</td>
+                  <td data-label="Action">
+                    <button className="action-btn delete-btn" onClick={() => deleteHoliday(holiday._id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

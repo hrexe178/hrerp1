@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const os = require('os');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -39,6 +40,9 @@ const defaultAllowedOrigins = [
   'https://hrerpabhiroom.netlify.app',
   'https://wonderful-haupia-647cea.netlify.app',
   'https://hrerp1-dgfq.vercel.app',
+  'https://katalyxhrerp.online',
+  'http://katalyxhrerp.online',
+  'https://hrerp1.vercel.app',
 ];
 const envAllowedOrigins = (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || '')
   .split(',')
@@ -59,7 +63,7 @@ app.use('/api/auth/login', authLimiter);
 
 app.use(cors({
   origin: function (origin, callback) {
-    const isAllowed = !origin || allowedOrigins.includes(origin);
+    const isAllowed = !origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app');
     if (isAllowed) {
       callback(null, true);
     } else {
@@ -71,7 +75,7 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
-app.use('/generated-payslips', express.static(path.join(__dirname, 'generated-payslips')));
+app.use('/generated-payslips', express.static(path.join(os.tmpdir(), 'generated-payslips')));
 
 // Request logging
 app.use((req, res, next) => {

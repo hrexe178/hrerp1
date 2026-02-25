@@ -102,13 +102,13 @@ const ExpenseManagement = () => {
   };
 
   return (
-    <div className="reports">
+    <div className="dashboard-page animate-fade-in reports">
       <h2>Expense & Reimbursement</h2>
       {error && <div className="error">{error}</div>}
 
-      <form onSubmit={submitExpense}>
-        <h3>Submit Expense</h3>
-        <select value={formData.category} onChange={(e) => setFormData((p) => ({ ...p, category: e.target.value }))}>
+      <form onSubmit={submitExpense} className="glass-card form-group" style={{ marginBottom: '2rem' }}>
+        <h3>Submit New Expense</h3>
+        <select value={formData.category} className="modern-input" onChange={(e) => setFormData((p) => ({ ...p, category: e.target.value }))}>
           <option value="Travel">Travel</option>
           <option value="Meals">Meals</option>
           <option value="Supplies">Supplies</option>
@@ -117,57 +117,28 @@ const ExpenseManagement = () => {
           <option value="Training">Training</option>
           <option value="Other">Other</option>
         </select>
-        <input type="number" min="0.01" step="0.01" placeholder="Amount" value={formData.amount} onChange={(e) => setFormData((p) => ({ ...p, amount: e.target.value }))} required />
-        <textarea placeholder="Description" value={formData.description} onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))} required />
-        <input type="url" placeholder="Receipt URL (optional)" value={formData.receiptUrl} onChange={(e) => setFormData((p) => ({ ...p, receiptUrl: e.target.value }))} />
-        <button type="submit">Submit</button>
+        <input type="number" min="0.01" step="0.01" placeholder="Amount" className="modern-input" value={formData.amount} onChange={(e) => setFormData((p) => ({ ...p, amount: e.target.value }))} required />
+        <textarea placeholder="Description" className="modern-input" value={formData.description} onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))} required />
+        <input type="url" placeholder="Receipt URL (optional)" className="modern-input" value={formData.receiptUrl} onChange={(e) => setFormData((p) => ({ ...p, receiptUrl: e.target.value }))} />
+        <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: '1rem' }}>Submit Request</button>
       </form>
 
       <h3>My Expenses</h3>
       {loading ? <div>Loading...</div> : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {myExpenses.map((expense) => (
-              <tr key={expense._id}>
-                <td data-label="Date">{formatDate(expense.submittedOn)}</td>
-                <td data-label="Category">{expense.category}</td>
-                <td data-label="Amount">{expense.amount}</td>
-                <td data-label="Status">
-                  <span className={`status-badge ${expense.status === 'Manager Approved' ? 'status-manager-approved' : expense.status.toLowerCase()}`}>
-                    {expense.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-
-      {canApprove && (
-        <>
-          <h3>Approval Queue</h3>
+        <div className="table-responsive">
           <table className="table">
             <thead>
               <tr>
-                <th>Employee</th>
+                <th>Date</th>
                 <th>Category</th>
                 <th>Amount</th>
                 <th>Status</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {allExpenses.map((expense) => (
+              {myExpenses.map((expense) => (
                 <tr key={expense._id}>
-                  <td data-label="Employee">{expense.employee?.employeeId}</td>
+                  <td data-label="Date">{formatDate(expense.submittedOn)}</td>
                   <td data-label="Category">{expense.category}</td>
                   <td data-label="Amount">{expense.amount}</td>
                   <td data-label="Status">
@@ -175,21 +146,54 @@ const ExpenseManagement = () => {
                       {expense.status}
                     </span>
                   </td>
-                  <td data-label="Actions">
-                    {['Pending', 'Manager Approved'].includes(expense.status) && (
-                      <>
-                        <button className="btn" onClick={() => actionExpense(expense._id, 'approve')}>Approve</button>
-                        <button className="btn" onClick={() => actionExpense(expense._id, 'reject')}>Reject</button>
-                      </>
-                    )}
-                    {expense.status === 'Approved' && (
-                      <button className="btn" onClick={() => actionExpense(expense._id, 'pay')}>Mark Paid</button>
-                    )}
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {canApprove && (
+        <>
+          <h3>Approval Queue</h3>
+          <div className="table-responsive">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allExpenses.map((expense) => (
+                  <tr key={expense._id}>
+                    <td data-label="Employee">{expense.employee?.employeeId}</td>
+                    <td data-label="Category">{expense.category}</td>
+                    <td data-label="Amount">{expense.amount}</td>
+                    <td data-label="Status">
+                      <span className={`status-badge ${expense.status === 'Manager Approved' ? 'status-manager-approved' : expense.status.toLowerCase()}`}>
+                        {expense.status}
+                      </span>
+                    </td>
+                    <td data-label="Actions">
+                      {['Pending', 'Manager Approved'].includes(expense.status) && (
+                        <>
+                          <button className="action-btn" onClick={() => actionExpense(expense._id, 'approve')}>Approve</button>
+                          <button className="action-btn delete-btn" onClick={() => actionExpense(expense._id, 'reject')}>Reject</button>
+                        </>
+                      )}
+                      {expense.status === 'Approved' && (
+                        <button className="action-btn" onClick={() => actionExpense(expense._id, 'pay')}>Mark Paid</button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           <h3>Monthly Expense Report</h3>
           <div style={{ display: 'flex', gap: '10px', margin: '10px 0' }}>
@@ -212,30 +216,32 @@ const ExpenseManagement = () => {
             <button className="btn" onClick={fetchMonthlyReport}>Load Report</button>
             <button className="btn" onClick={exportMonthlyCsv}>Export CSV</button>
           </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Employee</th>
-                <th>Department</th>
-                <th>Total</th>
-                <th>Count</th>
-                <th>Approved</th>
-                <th>Paid</th>
-              </tr>
-            </thead>
-            <tbody>
-              {monthlyReport.map((row, index) => (
-                <tr key={`${row.employeeId}-${index}`}>
-                  <td data-label="Employee">{row.employeeId} - {row.employeeName}</td>
-                  <td data-label="Department">{row.department || '-'}</td>
-                  <td data-label="Total">{row.totalAmount}</td>
-                  <td data-label="Count">{row.totalCount}</td>
-                  <td data-label="Approved">{row.approvedAmount}</td>
-                  <td data-label="Paid">{row.paidAmount}</td>
+          <div className="table-responsive">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Department</th>
+                  <th>Total</th>
+                  <th>Count</th>
+                  <th>Approved</th>
+                  <th>Paid</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {monthlyReport.map((row, index) => (
+                  <tr key={`${row.employeeId}-${index}`}>
+                    <td data-label="Employee">{row.employeeId} - {row.employeeName}</td>
+                    <td data-label="Department">{row.department || '-'}</td>
+                    <td data-label="Total">{row.totalAmount}</td>
+                    <td data-label="Count">{row.totalCount}</td>
+                    <td data-label="Approved">{row.approvedAmount}</td>
+                    <td data-label="Paid">{row.paidAmount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
       )}
     </div>

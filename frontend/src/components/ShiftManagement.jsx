@@ -60,30 +60,34 @@ const ShiftManagement = () => {
   };
 
   return (
-    <div className="project-management">
+    <div className="dashboard-page animate-fade-in project-management">
       <h2>Shift Management</h2>
       {error && <div className="error">{error}</div>}
       {message && <div className="success-message">{message}</div>}
 
-      <form onSubmit={createShift}>
+      <form onSubmit={createShift} className="glass-card form-group" style={{ marginBottom: '2rem' }}>
         <h3>Create Shift</h3>
-        <input type="text" placeholder="Shift Name" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} required />
-        <input type="time" value={formData.startTime} onChange={(e) => setFormData((p) => ({ ...p, startTime: e.target.value }))} required />
-        <input type="time" value={formData.endTime} onChange={(e) => setFormData((p) => ({ ...p, endTime: e.target.value }))} required />
-        <input type="number" min="0" placeholder="Break (mins)" value={formData.breakDuration} onChange={(e) => setFormData((p) => ({ ...p, breakDuration: Number(e.target.value) }))} />
-        <input type="number" min="0" placeholder="Allowed late (mins)" value={formData.allowedLateMins} onChange={(e) => setFormData((p) => ({ ...p, allowedLateMins: Number(e.target.value) }))} />
-        <button type="submit">Create</button>
+        <input type="text" className="modern-input" placeholder="Shift Name" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} required />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <input type="time" className="modern-input" value={formData.startTime} onChange={(e) => setFormData((p) => ({ ...p, startTime: e.target.value }))} required />
+          <input type="time" className="modern-input" value={formData.endTime} onChange={(e) => setFormData((p) => ({ ...p, endTime: e.target.value }))} required />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <input type="number" className="modern-input" min="0" placeholder="Break (mins)" value={formData.breakDuration} onChange={(e) => setFormData((p) => ({ ...p, breakDuration: Number(e.target.value) }))} />
+          <input type="number" className="modern-input" min="0" placeholder="Allowed late (mins)" value={formData.allowedLateMins} onChange={(e) => setFormData((p) => ({ ...p, allowedLateMins: Number(e.target.value) }))} />
+        </div>
+        <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: '1rem' }}>Create Shift</button>
       </form>
 
-      <form onSubmit={assignShift}>
+      <form onSubmit={assignShift} className="glass-card form-group" style={{ marginBottom: '2rem' }}>
         <h3>Assign Shift to Employee</h3>
-        <select value={assignment.shiftId} onChange={(e) => setAssignment((p) => ({ ...p, shiftId: e.target.value }))} required>
+        <select value={assignment.shiftId} className="modern-input" onChange={(e) => setAssignment((p) => ({ ...p, shiftId: e.target.value }))} required>
           <option value="">Select shift</option>
           {shifts.filter((shift) => shift.isActive).map((shift) => (
             <option key={shift._id} value={shift._id}>{shift.name} ({shift.startTime}-{shift.endTime})</option>
           ))}
         </select>
-        <select value={assignment.employeeId} onChange={(e) => setAssignment((p) => ({ ...p, employeeId: e.target.value }))} required>
+        <select value={assignment.employeeId} className="modern-input" onChange={(e) => setAssignment((p) => ({ ...p, employeeId: e.target.value }))} required>
           <option value="">Select employee</option>
           {employees.map((employee) => (
             <option key={employee._id} value={employee._id}>
@@ -91,33 +95,35 @@ const ShiftManagement = () => {
             </option>
           ))}
         </select>
-        <button type="submit">Assign</button>
+        <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: '1rem' }}>Assign Shift</button>
       </form>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Break</th>
-            <th>Late Buffer</th>
-            <th>Active</th>
-          </tr>
-        </thead>
-        <tbody>
-          {shifts.map((shift) => (
-            <tr key={shift._id}>
-              <td data-label="Name">{shift.name}</td>
-              <td data-label="Start">{shift.startTime}</td>
-              <td data-label="End">{shift.endTime}</td>
-              <td data-label="Break">{shift.breakDuration} min</td>
-              <td data-label="Late Buffer">{shift.allowedLateMins} min</td>
-              <td data-label="Active">{shift.isActive ? 'Yes' : 'No'}</td>
+      <div className="table-responsive">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Break</th>
+              <th>Late Buffer</th>
+              <th>Active</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {shifts.map((shift) => (
+              <tr key={shift._id}>
+                <td data-label="Name">{shift.name}</td>
+                <td data-label="Start">{shift.startTime}</td>
+                <td data-label="End">{shift.endTime}</td>
+                <td data-label="Break">{shift.breakDuration} min</td>
+                <td data-label="Late Buffer">{shift.allowedLateMins} min</td>
+                <td data-label="Active">{shift.isActive ? 'Yes' : 'No'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

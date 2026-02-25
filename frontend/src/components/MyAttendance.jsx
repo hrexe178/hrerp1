@@ -23,34 +23,36 @@ const MyAttendance = () => {
   }, []);
 
   return (
-    <div className="attendance-management">
+    <div className="dashboard-page animate-fade-in attendance-management">
       <h2>My Attendance</h2>
       {error && <div className="error">{error}</div>}
       {loading ? (
         <div>Loading attendance...</div>
       ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Check In</th>
-              <th>Check Out</th>
-              <th>Work Hours</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row._id}>
-                <td data-label="Date">{formatDate(row.date)}</td>
-                <td data-label="Status">{row.status}</td>
-                <td data-label="Check In">{row.checkInTime || '-'}</td>
-                <td data-label="Check Out">{row.checkOutTime || '-'}</td>
-                <td data-label="Work Hours">{row.workHours || '-'}</td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Work Hours</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row._id}>
+                  <td data-label="Date">{formatDate(row.date)}</td>
+                  <td data-label="Status">{row.status}</td>
+                  <td data-label="Check In">{row.checkInTime || '-'}</td>
+                  <td data-label="Check Out">{row.checkOutTime || '-'}</td>
+                  <td data-label="Work Hours">{row.workHours || '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
