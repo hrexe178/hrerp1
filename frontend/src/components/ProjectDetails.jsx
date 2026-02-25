@@ -29,20 +29,23 @@ const ProjectDetails = () => {
 
   return (
     <div className="project-details">
-      <h1>{project.projectName}</h1>
+      <h1>{project.name || project.projectName}</h1>
       <div className="details-container">
         <p><strong>Description:</strong> {project.description}</p>
         <p><strong>Status:</strong> {project.status}</p>
         <p><strong>Start Date:</strong> {new Date(project.startDate).toLocaleDateString()}</p>
         <p><strong>End Date:</strong> {project.endDate ? new Date(project.endDate).toLocaleDateString() : 'N/A'}</p>
-        <p><strong>Budget:</strong> ${project.budget}</p>
+        <p><strong>Budget:</strong> {project.budget?.estimated || project.budget} {project.budget?.currency || 'INR'}</p>
         <p><strong>Progress:</strong> {project.progressPercentage}%</p>
         <p><strong>Manager:</strong> {project.manager?.firstName} {project.manager?.lastName}</p>
         <p><strong>Priority:</strong> {project.priority}</p>
         <h3>Team Members</h3>
         <ul>
           {project.teamMembers?.map((member) => (
-            <li key={member._id}>{member.firstName} {member.lastName}</li>
+            <li key={member._id}>
+              {member.employee?.firstName} {member.employee?.lastName}
+              {member.role ? ` (${member.role})` : ''}
+            </li>
           ))}
         </ul>
       </div>
